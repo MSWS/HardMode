@@ -332,7 +332,7 @@ public class MSG {
 			name = "-" + name;
 		return name + " " + suff;
 	}
-	
+
 	public static String parseDecimal(double decimal, int length) {
 		return String.format("%." + length + "f", decimal);
 	}

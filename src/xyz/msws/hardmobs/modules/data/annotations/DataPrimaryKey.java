@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import xyz.msws.hardmobs.modules.data.exceptions.DataPrimaryKeyException;
+
 /**
  * An annotation used to declare the primary key for a class, for example the
  * uuid of a player if you're storing currency

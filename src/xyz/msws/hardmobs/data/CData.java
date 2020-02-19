@@ -9,7 +9,7 @@ public interface CData {
 //	boolean saveData();
 
 	boolean hasData(String key);
-	
+
 	Map<String, Object> getData();
 
 	default <T> T getData(Class<T> cast, String key, T def) {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -91,5 +92,18 @@ public class Utils {
 			}
 		}
 		return event.getDamager();
+	}
+
+	public static int partsInArmor(Material mat) {
+		if (mat.toString().contains("_HELMET")) {
+			return 5;
+		} else if (mat.toString().contains("_CHESTPLATE")) {
+			return 8;
+		} else if (mat.toString().contains("_LEGGINGS")) {
+			return 7;
+		} else if (mat.toString().contains("_BOOTS")) {
+			return 4;
+		}
+		return 0;
 	}
 }
