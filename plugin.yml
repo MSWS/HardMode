@@ -1,4 +1,4 @@
-main: xyz.msws.hardmobs.HardMobs
+main: xyz.msws.hardmode.HardMobs
 name: HardMobs
 version: 1.0
 author: MSWS
