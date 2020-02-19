@@ -1,0 +1,5 @@
+main: xyz.msws.hardmobs.HardMobs
+name: HardMobs
+version: 1.0
+author: MSWS
+api-version: 1.15

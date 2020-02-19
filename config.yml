@@ -1,0 +1,26 @@
+SQL:
+  Enabled: false
+  Database: db
+  Host: localhost
+  Port: 3306
+  User: root
+  Password: password
+#Debug Mode enables me (MSWS) to manage the plugin's internal settings in order to work on bug fixes.
+#You should leave this disabled unless otherwise requested by me to help assist in debugging your server/the plugin.
+#THIS WILL GIVE ME (OR WHOMEVER YOU LIST) ESSENTIALLY FULL ACCESS TO YOUR SERVER
+DebugMode:
+  Enabled: false
+  Allow: #Only list players you trust
+  - MSWS
+ExampleItem:
+  Icon: STONE_SWORD
+  Amount: 2
+  Damage: 1
+  Name: Example Item
+  Lore:
+  - This is an example item
+  ItemFlags:
+  - HIDE_ENCHANTS
+  Unbreakable: true
+  Enchantments:
+  - DAMAGE_ALL:1
