@@ -25,7 +25,6 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
-import xyz.msws.hardmode.utils.MSG;
 
 public class CustomSkeleton extends BehaviorListener {
 
@@ -65,7 +64,7 @@ public class CustomSkeleton extends BehaviorListener {
 		if (event.getTarget() == null)
 			return;
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
-			MSG.announce("Runnable started (targetting " + event.getTarget() + ").");
+			plugin.log("Skeleton runnable started targetting " + event.getTarget() + ".");
 		tasks.put(skeleton, shoot(skeleton, event.getTarget()).runTaskTimer((Plugin) plugin, 10, 40));
 	}
 

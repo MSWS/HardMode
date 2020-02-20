@@ -8,8 +8,8 @@ import java.util.Map;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.Attack;
 import xyz.msws.hardmode.attacks.FastArrowAttack;
+import xyz.msws.hardmode.attacks.GrabTeleportAttack;
 import xyz.msws.hardmode.attacks.TNTAttack;
-import xyz.msws.hardmode.attacks.WebAttack;
 import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
@@ -40,9 +40,10 @@ public class MobManager extends AbstractModule {
 	}
 
 	public void loadAttacks() {
-		attacks.put("web", new WebAttack(plugin));
+//		attacks.put("web", new WebAttack(plugin));
 		attacks.put("fastarrow", new FastArrowAttack(plugin));
 		attacks.put("tnt", new TNTAttack(plugin));
+		attacks.put("grabteleport", new GrabTeleportAttack(plugin));
 	}
 
 	public Attack getAttack(String id) {

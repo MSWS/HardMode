@@ -17,32 +17,34 @@ import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
 
-@Deprecated
-/**
- * Use @class BlockThrowAttack
- * 
- * @author imodm
- *
- */
-public class WebAttack implements Attack {
+public class BlockThrowAttack implements Attack {
 
-	private static HardMode plugin;
+	private HardMode plugin;
 
-	public WebAttack(HardMode plugin) {
-		WebAttack.plugin = plugin;
+	public BlockThrowAttack(HardMode plugin) {
+		this.plugin = plugin;
 	}
 
 	@Override
-	public void attack(Entity attacker, Entity entity) {
-		Preconditions.checkArgument(attacker.getWorld().equals(entity.getWorld()),
+	public void attack(Entity attacker, Entity target) {
+	}
+
+	@Override
+	public void attack(Entity attacker, Entity target, Object... data) {
+
+		Preconditions.checkArgument(attacker.getWorld().equals(target.getWorld()),
 				"Attacker and world not in same world");
 
-		if (attacker.getLocation().distanceSquared(entity.getLocation()) >= 100)
+		Preconditions.checkArgument(data[0].getClass().equals(Material.class), "Data must be Material");
+
+		Material material = (Material) data[0];
+
+		if (attacker.getLocation().distanceSquared(target.getLocation()) >= 100)
 			return;
 
-		Item item = attacker.getWorld().dropItem(attacker.getLocation(), new ItemStack(Material.COBWEB));
+		Item item = attacker.getWorld().dropItem(attacker.getLocation(), new ItemStack(material));
 		item.setPickupDelay(999999);
-		Vector aim = entity.getLocation().toVector().subtract(attacker.getLocation().toVector());
+		Vector aim = target.getLocation().toVector().subtract(attacker.getLocation().toVector());
 		aim.normalize();
 		aim.multiply(.8);
 		aim.setY(aim.getY() + .5);
@@ -72,7 +74,7 @@ public class WebAttack implements Attack {
 				}
 				item.remove();
 				BlockData oldBlock = block.getBlockData();
-				block.setType(Material.COBWEB);
+				block.setType(material);
 				for (Entity ent : block.getLocation().getNearbyEntities(1, 1, 1)) {
 					if (ent.equals(attacker))
 						continue;
@@ -96,6 +98,7 @@ public class WebAttack implements Attack {
 				this.cancel();
 			}
 		}.runTaskTimer(plugin, 5, 1);
+
 	}
 
 }

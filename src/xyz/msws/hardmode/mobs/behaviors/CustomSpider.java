@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -72,7 +73,8 @@ public class CustomSpider extends BehaviorListener {
 
 		if (event.getTarget() == null)
 			return;
-		plugin.log("Spider runnable started targetting " + event.getTarget() + ".");
+		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
+			plugin.log("Spider runnable started targetting " + event.getTarget() + ".");
 
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 
@@ -90,7 +92,7 @@ public class CustomSpider extends BehaviorListener {
 				if (System.currentTimeMillis() < nextShot)
 					return;
 				nextShot += random.nextDouble(500, 6000);
-				plugin.getMobManager().getAttack("web").attack(spider, event.getTarget());
+				plugin.getMobManager().getAttack("blockthrow").attack(spider, event.getTarget(), Material.COBWEB);
 			}
 		}.runTaskTimer(plugin, 20, 1);
 	}
