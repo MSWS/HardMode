@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -22,7 +21,6 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
@@ -80,33 +78,10 @@ public class CustomSkeleton extends BehaviorListener {
 						|| !skeleton.getTarget().isValid() || skeleton.getTarget() != target) {
 					this.cancel();
 					tasks.remove(skeleton);
-					if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
-						MSG.announce("Runnable cancelled (skeleton: " + skeleton + " starget: " + skeleton.getTarget()
-								+ " target: " + target + ").");
 					return;
 				}
 
-				Vector aim = target.getLocation().toVector().subtract(skeleton.getLocation().toVector());
-				aim.normalize().multiply(3);
-				skeleton.launchProjectile(Arrow.class, aim);
-				skeleton.getWorld().playSound(skeleton.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 2);
-
-				Location current = skeleton.getEyeLocation();
-				aim = target.getEyeLocation().toVector().subtract(current.toVector()).normalize();
-				int particles = 0;
-				double lastDist = Double.MAX_VALUE, currentDist = 0;
-
-				// If current dist > lastDist then we have gone PAST the target
-				while (currentDist < lastDist && particles < 200) {
-					current.getWorld().spawnParticle(Particle.FLAME, current, 0);
-					if (current.getBlock().getType().isSolid())
-						return;
-					if (currentDist != 0)
-						lastDist = currentDist;
-					current.add(aim.clone().normalize().multiply(1.0 / 2.0));
-					currentDist = current.distanceSquared(skeleton.getTarget().getLocation());
-					particles++;
-				}
+				plugin.getMobManager().getAttack("fastarrow").attack(skeleton, target);
 			}
 		};
 	}

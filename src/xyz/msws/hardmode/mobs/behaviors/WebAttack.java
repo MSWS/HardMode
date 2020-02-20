@@ -16,7 +16,6 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
-import xyz.msws.hardmode.utils.MSG;
 
 public class WebAttack implements Attack {
 
@@ -56,7 +55,6 @@ public class WebAttack implements Attack {
 
 					if (target == null)
 						return;
-					MSG.announce("Teleported to " + target);
 					item.teleport(target.getLocation().clone().subtract(0, 1, 0));
 					block = target.getLocation().getBlock();
 				}

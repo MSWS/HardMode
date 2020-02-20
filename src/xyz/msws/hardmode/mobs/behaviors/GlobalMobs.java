@@ -1,5 +1,6 @@
 package xyz.msws.hardmode.mobs.behaviors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
@@ -49,7 +51,16 @@ public class GlobalMobs extends BehaviorListener {
 	public void onDeath(EntityDeathEvent event) {
 		if (!selector.matches(event.getEntity()))
 			return;
-//		Monster entity = (Monster) event.getEntity();
+
+		Monster entity = (Monster) event.getEntity();
+		if (entity.fromMobSpawner()) {
+			List<ItemStack> loot = new ArrayList<ItemStack>();
+			for (ItemStack stack : event.getDrops())
+				loot.add(new CItem(stack).amount((int) Math.ceil(stack.getAmount() / 2.0)).build());
+			event.getDrops().clear();
+			event.getDrops().addAll(loot);
+			return;
+		}
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		if (random.nextBoolean())
 			return;
