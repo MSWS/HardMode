@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.modules.data.annotations.DataIgnore;
@@ -38,7 +38,7 @@ import xyz.msws.hardmode.utils.MSG;
  */
 public class DataManager extends AbstractModule {
 
-	public DataManager(HardMobs plugin, ConnectionManager connection) {
+	public DataManager(HardMode plugin, ConnectionManager connection) {
 		super("DataManager", plugin);
 		this.connectionManager = connection;
 	}

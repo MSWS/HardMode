@@ -25,7 +25,7 @@ import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.debug.DebugModule;
 import xyz.msws.hardmode.modules.mobs.MobManager;
 
-public class HardMobs extends JavaPlugin implements MPlugin {
+public class HardMode extends JavaPlugin implements MPlugin {
 	private Set<AbstractModule> modules = new HashSet<>();
 
 	private Saveable data;

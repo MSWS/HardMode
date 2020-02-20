@@ -2,13 +2,13 @@ package xyz.msws.hardmode.modules.mobs;
 
 import org.bukkit.entity.Entity;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 
 public abstract class MobModifier extends BehaviorListener {
 
 	private Entity mob;
 
-	public MobModifier(HardMobs plugin) {
+	public MobModifier(HardMode plugin) {
 		super(plugin);
 		selector = new MobSelector() {
 			@Override

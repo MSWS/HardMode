@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.Callback;
@@ -19,7 +19,7 @@ public class InteractionModule extends AbstractModule implements Listener {
 
 	private Set<CItem> items = new HashSet<>();
 
-	public InteractionModule(HardMobs plugin) {
+	public InteractionModule(HardMode plugin) {
 		super("InteractionModule", plugin);
 	}
 

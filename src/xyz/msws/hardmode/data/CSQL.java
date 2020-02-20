@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.data.ConnectionManager;
 import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.data.SQLSelector;
@@ -25,9 +25,9 @@ public class CSQL implements Saveable {
 	private Class<?> obj;
 
 	private String table, idField;
-	private HardMobs plugin;
+	private HardMode plugin;
 
-	public CSQL(String table, Class<?> obj, HardMobs plugin) {
+	public CSQL(String table, Class<?> obj, HardMode plugin) {
 		this.table = table;
 		this.plugin = plugin;
 		this.obj = obj;

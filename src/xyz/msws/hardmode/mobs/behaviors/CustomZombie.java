@@ -6,16 +6,20 @@ import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -23,15 +27,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 import xyz.msws.hardmode.utils.Utils;
 
 public class CustomZombie extends BehaviorListener {
 	private final Map<PotionEffect, Double> chances;
+	private final Map<ItemStack, Double> equipment;
 
-	public CustomZombie(HardMobs plugin) {
+	public CustomZombie(HardMode plugin) {
 		super(plugin);
 
 		selector = new MobSelector() {
@@ -44,12 +50,22 @@ public class CustomZombie extends BehaviorListener {
 		};
 
 		chances = new HashMap<PotionEffect, Double>();
+		equipment = new HashMap<ItemStack, Double>();
 
-		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30, 0), .15);
-		chances.put(new PotionEffect(PotionEffectType.SLOW, 10, 1), .2);
-		chances.put(new PotionEffect(PotionEffectType.POISON, 15, 0), .1);
-		chances.put(new PotionEffect(PotionEffectType.WITHER, 5, 1), .05);
-		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20, 0), .2);
+		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30 * 20, 0), 1.0 / 20);
+		chances.put(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 1), 1.0 / 25);
+		chances.put(new PotionEffect(PotionEffectType.POISON, 15 * 20, 0), 1.0 / 30);
+		chances.put(new PotionEffect(PotionEffectType.WITHER, 5 * 20, 1), 1.0 / 40);
+		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), 1.0 / 32);
+
+		equipment.put(new CItem(Material.DIAMOND_SWORD).build(), 1.0 / 100);
+		equipment.put(new CItem(Material.WOODEN_SWORD).enchantment(Enchantment.DAMAGE_ALL, 1).build(), 1.0 / 42);
+		equipment.put(new CItem(Material.WOODEN_AXE).build(), 1.0 / 55);
+		equipment.put(new CItem(Material.FISHING_ROD).enchantment(Enchantment.VANISHING_CURSE, 1).build(), 1.0 / 50);
+		equipment.put(new CItem(Material.GOLD_NUGGET).build(), 1.0 / 35);
+		equipment.put(new CItem(Material.STONE).build(), 1.0 / 46);
+		equipment.put(new CItem(Material.IRON_SWORD).build(), 1.0 / 75);
+		equipment.put(new CItem(Material.STONE_SWORD).enchantment(Enchantment.DURABILITY, 2).build(), 1.0 / 52);
 	}
 
 	@EventHandler
@@ -75,9 +91,15 @@ public class CustomZombie extends BehaviorListener {
 
 		Location spawnLocation = zombie.getLocation().clone();
 		spawnLocation.add(random.nextDouble(-5, 5), 0, random.nextDouble(-5, 5));
+
 		spawnLocation.setY(spawnLocation.getWorld().getHighestBlockYAt(spawnLocation) + 1);
 
-		Zombie newZombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
+		if (zombie.getType() == EntityType.DROWNED)
+			for (int y = spawnLocation.getBlockY(); y >= 0 && spawnLocation.getBlock().isLiquid(); y--) {
+				spawnLocation.setY(y);
+			}
+
+		Zombie newZombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, zombie.getType());
 
 		newZombie.setMetadata("summonedZombie", new FixedMetadataValue(plugin, true));
 
@@ -93,31 +115,39 @@ public class CustomZombie extends BehaviorListener {
 			return;
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
-//		Zombie zombie = (Zombie) event.getDamager();
 		LivingEntity entity = (LivingEntity) event.getEntity();
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 
-		double leatherProt = 0;
+		double reduction = 0;
 
 		if (entity instanceof HumanEntity) {
 			HumanEntity player = (HumanEntity) entity;
 			for (ItemStack armor : player.getInventory().getArmorContents()) {
-				if (armor.getType().toString().contains("LEATHER_")) {
-					leatherProt += Utils.partsInArmor(armor.getType());
-				}
+				if (armor == null)
+					continue;
+				if (armor.getType().toString().contains("LEATHER_"))
+					reduction += Utils.partsInArmor(armor.getType());
 			}
 		}
 
-		leatherProt /= 24.0;
+		reduction /= 25.0;
+
+		if (entity instanceof Player)
+			if (((Player) entity).isBlocking())
+				reduction += .4;
+
+		boolean infected = false;
 
 		for (Entry<PotionEffect, Double> entry : chances.entrySet()) {
 			double min = entry.getValue();
-			min *= 1 - leatherProt;
+			min *= 1 - reduction;
 			if (random.nextDouble() > min)
 				continue;
 			entity.addPotionEffect(entry.getKey());
+			infected = true;
 		}
-		entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 2, .5f);
+		if (infected)
+			entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 2, .5f);
 	}
 
 	@EventHandler
@@ -129,7 +159,28 @@ public class CustomZombie extends BehaviorListener {
 			return;
 		if (ThreadLocalRandom.current().nextDouble() > .2)
 			return;
-		respawn(zombie.getLocation(), zombie.getTarget(), 8000);
+		respawn(zombie.getLocation(), zombie.getTarget(), 2000);
+	}
+
+	@EventHandler
+	public void onSpawn(EntitySpawnEvent event) {
+		if (!selector.matches(event.getEntity()))
+			return;
+		Zombie zombie = (Zombie) event.getEntity();
+
+		if (zombie.getEquipment().getItemInMainHand() != null
+				&& zombie.getEquipment().getItemInMainHand().getType() != Material.AIR)
+			return;
+
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		for (int i = 0; i < random.nextInt(5); i++) {
+			for (Entry<ItemStack, Double> entry : equipment.entrySet()) {
+				if (random.nextDouble() > entry.getValue())
+					continue;
+				zombie.getEquipment().setItemInMainHand(entry.getKey());
+				return;
+			}
+		}
 	}
 
 	public void respawn(Location location, LivingEntity target, long time) {
@@ -141,25 +192,24 @@ public class CustomZombie extends BehaviorListener {
 			public void run() {
 				if (System.currentTimeMillis() >= spawnTime) {
 					Zombie newZombie = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
-					newZombie.setMetadata("hasRespawned", new FixedMetadataValue(plugin, true));
-					location.getWorld().playSound(location, Sound.ENTITY_SKELETON_HURT, 2, .25f);
+					newZombie.setMetadata("summonedZombie", new FixedMetadataValue(plugin, true));
+					location.getWorld().playSound(location, Sound.ENTITY_SKELETON_HURT, 2, .1f);
 					if (target != null && target.isValid())
 						newZombie.setTarget(target);
-
 					this.cancel();
 					return;
 				}
 
-				if (System.currentTimeMillis() - lastPlay > 200) {
+				if (System.currentTimeMillis() - lastPlay > 800) {
 					lastPlay = System.currentTimeMillis();
 					location.getWorld().playSound(location, Sound.ENTITY_ZOMBIE_HURT, 2, .1f);
 				}
 
-				double radius = .8 + Math.sin(spawnTime - System.currentTimeMillis()) * 2.0;
+				double radius = .8 + Math.sin(spawnTime - System.currentTimeMillis()) * 1.2;
 
 				for (double i = 0; i < Math.PI * 2; i += .5) {
 					Location loc = location.clone().add(Math.sin(i) * radius, 0, Math.cos(i) * radius);
-					location.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 0, 0, .075, 0);
+					location.getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc, 0, 0, .075, 0);
 				}
 			}
 		}.runTaskTimer(plugin, 1, 1);
@@ -170,6 +220,5 @@ public class CustomZombie extends BehaviorListener {
 		EntityTargetLivingEntityEvent.getHandlerList().unregister(this);
 		EntityDamageByEntityEvent.getHandlerList().unregister(this);
 		EntityDeathEvent.getHandlerList().unregister(this);
-
 	}
 }

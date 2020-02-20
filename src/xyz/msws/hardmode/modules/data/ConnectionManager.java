@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.MSG;
@@ -21,7 +21,7 @@ import xyz.msws.hardmode.utils.MSG;
  */
 public class ConnectionManager extends AbstractModule {
 
-	public ConnectionManager(HardMobs plugin) {
+	public ConnectionManager(HardMode plugin) {
 		super("ConnectionManager", plugin);
 	}
 

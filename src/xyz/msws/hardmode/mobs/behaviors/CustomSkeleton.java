@@ -24,7 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 import xyz.msws.hardmode.utils.MSG;
@@ -33,14 +33,14 @@ public class CustomSkeleton extends BehaviorListener {
 
 	private Map<Skeleton, BukkitTask> tasks = new HashMap<Skeleton, BukkitTask>();
 
-	public CustomSkeleton(HardMobs plugin) {
+	public CustomSkeleton(HardMode plugin) {
 		super(plugin);
 
 		selector = new MobSelector() {
 
 			@Override
 			public boolean matches(Entity ent) {
-				return (ent.getType() == EntityType.SKELETON);
+				return (ent.getType() == EntityType.SKELETON || ent.getType() == EntityType.STRAY);
 			}
 		};
 	}
@@ -66,8 +66,8 @@ public class CustomSkeleton extends BehaviorListener {
 
 		if (event.getTarget() == null)
 			return;
-
-		MSG.announce("Runnable started (targetting " + event.getTarget() + ").");
+		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
+			MSG.announce("Runnable started (targetting " + event.getTarget() + ").");
 		tasks.put(skeleton, shoot(skeleton, event.getTarget()).runTaskTimer((Plugin) plugin, 10, 40));
 	}
 
@@ -84,6 +84,7 @@ public class CustomSkeleton extends BehaviorListener {
 								+ " target: " + target + ").");
 					return;
 				}
+
 				Vector aim = target.getLocation().toVector().subtract(skeleton.getLocation().toVector());
 				aim.normalize().multiply(3);
 				skeleton.launchProjectile(Arrow.class, aim);
@@ -97,6 +98,8 @@ public class CustomSkeleton extends BehaviorListener {
 				// If current dist > lastDist then we have gone PAST the target
 				while (currentDist < lastDist && particles < 200) {
 					current.getWorld().spawnParticle(Particle.FLAME, current, 0);
+					if (current.getBlock().getType().isSolid())
+						return;
 					if (currentDist != 0)
 						lastDist = currentDist;
 					current.add(aim.clone().normalize().multiply(1.0 / 2.0));
@@ -109,7 +112,7 @@ public class CustomSkeleton extends BehaviorListener {
 
 	@EventHandler
 	public void onSpawn(EntitySpawnEvent event) {
-		if (selector.matches(event.getEntity()))
+		if (!selector.matches(event.getEntity()))
 			return;
 		Skeleton skeleton = (Skeleton) event.getEntity();
 		skeleton.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(.52);
@@ -117,7 +120,7 @@ public class CustomSkeleton extends BehaviorListener {
 
 	@EventHandler
 	public void onDeath(EntityDeathEvent event) {
-		if (selector.matches(event.getEntity()))
+		if (!selector.matches(event.getEntity()))
 			return;
 		Skeleton skeleton = (Skeleton) event.getEntity();
 		if (ThreadLocalRandom.current().nextDouble() < .6)

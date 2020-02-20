@@ -14,7 +14,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.MSG;
@@ -31,7 +31,7 @@ public class CommandModule extends AbstractModule implements Listener {
 
 	private CommandMap map;
 
-	public CommandModule(HardMobs plugin) {
+	public CommandModule(HardMode plugin) {
 		super("CommandModule", plugin);
 	}
 

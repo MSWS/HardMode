@@ -1,5 +1,5 @@
-main: xyz.msws.hardmode.HardMobs
-name: HardMobs
+main: xyz.msws.hardmode.HardMode
+name: HardMode
 version: 1.0
 author: MSWS
 api-version: 1.15

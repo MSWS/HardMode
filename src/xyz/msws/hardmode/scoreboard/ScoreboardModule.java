@@ -15,7 +15,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.MSG;
@@ -28,9 +28,9 @@ public class ScoreboardModule extends AbstractModule {
 
 	private final String scoreboardName = "";
 
-	private HardMobs plugin;
+	private HardMode plugin;
 
-	public ScoreboardModule(String id, HardMobs plugin) {
+	public ScoreboardModule(String id, HardMode plugin) {
 		super(id, plugin);
 		this.plugin = plugin;
 	}

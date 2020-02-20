@@ -16,7 +16,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.MSG;
@@ -24,7 +24,7 @@ import xyz.msws.hardmode.utils.Utils;
 
 public class DebugModule extends AbstractModule implements Listener {
 
-	public DebugModule(HardMobs plugin) {
+	public DebugModule(HardMode plugin) {
 		super("DebugModule", plugin);
 	}
 

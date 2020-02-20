@@ -1,17 +1,17 @@
 package xyz.msws.hardmode.modules;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 
 public abstract class AbstractModule {
 	protected String id;
 	protected boolean enabled;
-	protected HardMobs plugin;
+	protected HardMode plugin;
 
-	public AbstractModule(HardMobs plugin) {
+	public AbstractModule(HardMode plugin) {
 		this.plugin = plugin;
 	}
 
-	public AbstractModule(String id, HardMobs plugin) {
+	public AbstractModule(String id, HardMode plugin) {
 		this.id = id;
 		this.plugin = plugin;
 	}

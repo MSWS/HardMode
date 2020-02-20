@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 
 public abstract class BehaviorListener implements Listener {
-	protected HardMobs plugin;
+	protected HardMode plugin;
 	protected MobSelector selector;
 
-	public BehaviorListener(HardMobs plugin) {
+	public BehaviorListener(HardMode plugin) {
 		this.plugin = plugin;
 
 		Bukkit.getPluginManager().registerEvents(this, (Plugin) this.plugin);

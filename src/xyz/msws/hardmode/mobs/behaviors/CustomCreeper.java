@@ -1,8 +1,5 @@
 package xyz.msws.hardmode.mobs.behaviors;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
@@ -12,14 +9,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.inventory.ItemStack;
 
-import xyz.msws.hardmode.HardMobs;
+import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
 public class CustomCreeper extends BehaviorListener {
-	public CustomCreeper(HardMobs plugin) {
+	public CustomCreeper(HardMode plugin) {
 		super(plugin);
 
 		selector = new MobSelector() {
@@ -43,25 +39,17 @@ public class CustomCreeper extends BehaviorListener {
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event) {
 		Entity entity = event.getEntity();
-		if (getSelector().matches(entity))
+		if (!getSelector().matches(entity))
 			return;
 
 		Creeper creeper = (Creeper) entity;
 		creeper.setExplosionRadius(getExplosionPower(creeper));
 		creeper.explode();
-
-		ThreadLocalRandom random = ThreadLocalRandom.current();
-
-		for (int i = 0; i < 3; i++) {
-			if (random.nextDouble() < .4)
-				continue;
-			event.getDrops().add(new ItemStack(Material.GOLD_NUGGET));
-		}
 	}
 
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent event) {
-		if (getSelector().matches(event.getEntity()))
+		if (!getSelector().matches(event.getEntity()))
 			return;
 
 		Creeper creeper = (Creeper) event.getEntity();
