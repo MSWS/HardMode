@@ -53,7 +53,6 @@ public class FastArrowAttack implements Attack {
 			}
 			particles++;
 		}
-		MSG.announce(particles + "");
 
 		if (particles >= 200)
 			MSG.announce("FastArrowAttack reached max particle amount (" + particles + ")");

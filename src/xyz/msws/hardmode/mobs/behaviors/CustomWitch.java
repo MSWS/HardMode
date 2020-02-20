@@ -7,10 +7,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Witch;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -56,8 +58,6 @@ public class CustomWitch extends BehaviorListener {
 	public void onSpawn(EntityTargetLivingEntityEvent event) {
 		if (!selector.matches(event.getEntity()))
 			return;
-		if (event.getEntity() == null || !event.getEntity().isValid())
-			return;
 		Witch witch = (Witch) event.getEntity();
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		ItemStack potion = new ItemStack(Material.POTION);
@@ -76,6 +76,20 @@ public class CustomWitch extends BehaviorListener {
 			return;
 
 		witch.setDrinkingPotion(potion);
+	}
+
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent event) {
+		if (!selector.matches(event.getEntity()))
+			return;
+		Witch witch = (Witch) event.getEntity();
+		if (witch.isInsideVehicle())
+			return;
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		if (random.nextDouble() > .2)
+			return;
+		Bat bat = (Bat) witch.getWorld().spawnEntity(witch.getLocation(), EntityType.BAT);
+		bat.addPassenger(witch);
 	}
 
 	@Override

@@ -113,7 +113,7 @@ public class GlobalMobs extends BehaviorListener {
 				mEnt.getWorld().playSound(mEnt.getLocation(), Sound.UI_BUTTON_CLICK, .5f, .05f);
 
 			}
-		}.runTaskTimer(plugin, 20, 10);
+		}.runTaskTimer(plugin, 5, 5);
 	}
 
 	@Override
