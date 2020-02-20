@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.msws.hardmode.HardMode;
-import xyz.msws.hardmode.mobs.behaviors.Attack;
+import xyz.msws.hardmode.attacks.Attack;
+import xyz.msws.hardmode.attacks.FastArrowAttack;
+import xyz.msws.hardmode.attacks.TNTAttack;
+import xyz.msws.hardmode.attacks.WebAttack;
 import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
 import xyz.msws.hardmode.mobs.behaviors.CustomSpider;
 import xyz.msws.hardmode.mobs.behaviors.CustomWitch;
 import xyz.msws.hardmode.mobs.behaviors.CustomZombie;
-import xyz.msws.hardmode.mobs.behaviors.FastArrowAttack;
 import xyz.msws.hardmode.mobs.behaviors.GlobalMobs;
-import xyz.msws.hardmode.mobs.behaviors.TNTAttack;
-import xyz.msws.hardmode.mobs.behaviors.WebAttack;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 

@@ -52,11 +52,11 @@ public class CustomZombie extends BehaviorListener {
 		chances = new HashMap<PotionEffect, Double>();
 		equipment = new HashMap<ItemStack, Double>();
 
-		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30 * 20, 0), 1.0 / 20);
-		chances.put(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 1), 1.0 / 25);
-		chances.put(new PotionEffect(PotionEffectType.POISON, 15 * 20, 0), 1.0 / 30);
-		chances.put(new PotionEffect(PotionEffectType.WITHER, 5 * 20, 1), 1.0 / 40);
-		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), 1.0 / 32);
+		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30 * 20, 0), 1.0 / 52);
+		chances.put(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 1), 1.0 / 28);
+		chances.put(new PotionEffect(PotionEffectType.POISON, 15 * 20, 0), 1.0 / 47);
+		chances.put(new PotionEffect(PotionEffectType.WITHER, 5 * 20, 1), 1.0 / 32);
+		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), 1.0 / 25);
 
 		equipment.put(new CItem(Material.DIAMOND_SWORD).build(), 1.0 / 100);
 		equipment.put(new CItem(Material.WOODEN_SWORD).enchantment(Enchantment.DAMAGE_ALL, 1).build(), 1.0 / 42);
@@ -66,6 +66,10 @@ public class CustomZombie extends BehaviorListener {
 		equipment.put(new CItem(Material.STONE).build(), 1.0 / 46);
 		equipment.put(new CItem(Material.IRON_SWORD).build(), 1.0 / 75);
 		equipment.put(new CItem(Material.STONE_SWORD).enchantment(Enchantment.DURABILITY, 2).build(), 1.0 / 52);
+		equipment.put(new CItem(Material.GOLDEN_SHOVEL).enchantment(Enchantment.DIG_SPEED, 1).build(), 1.0 / 72);
+		equipment.put(new CItem(Material.STICK).build(), 1.0 / 36);
+		equipment.put(new CItem(Material.REDSTONE).build(), 1.0 / 82);
+		equipment.put(new CItem(Material.DIAMOND_AXE).enchantment(Enchantment.DAMAGE_UNDEAD, 4).build(), 1.0 / 85);
 	}
 
 	@EventHandler

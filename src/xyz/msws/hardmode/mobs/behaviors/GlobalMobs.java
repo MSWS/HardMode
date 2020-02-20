@@ -39,11 +39,13 @@ public class GlobalMobs extends BehaviorListener {
 
 		loot = new HashMap<ItemStack, Double>();
 		loot.put(new ItemStack(Material.GOLD_BLOCK, 2), 1.0 / 400); // 18
+		loot.put(new ItemStack(Material.GOLD_BLOCK, 1), 1.0 / 300); // 18
+		loot.put(new ItemStack(Material.GOLDEN_APPLE, 1), 1.0 / 250); // 7
 		loot.put(new ItemStack(Material.GOLD_INGOT, 2), 1.0 / 200); // 2
 		loot.put(new ItemStack(Material.GOLD_INGOT, 1), 1.0 / 100); // 1
 		loot.put(new ItemStack(Material.GOLD_ORE, 1), 1.0 / 88); // 1
-		loot.put(new ItemStack(Material.GOLD_NUGGET, 3), 1.0 / 40); // 3/9
-		loot.put(new ItemStack(Material.GOLD_NUGGET, 2), 1.0 / 25); // 2/9
+		loot.put(new ItemStack(Material.GOLD_NUGGET, 3), 1.0 / 80); // 3/9
+		loot.put(new ItemStack(Material.GOLD_NUGGET, 2), 1.0 / 35); // 2/9
 		loot.put(new ItemStack(Material.GOLD_NUGGET, 1), 1.0 / 20); // 1/9
 	}
 

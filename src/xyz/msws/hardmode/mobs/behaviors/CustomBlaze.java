@@ -24,7 +24,6 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
-import xyz.msws.hardmode.utils.MSG;
 
 public class CustomBlaze extends BehaviorListener {
 
@@ -68,7 +67,8 @@ public class CustomBlaze extends BehaviorListener {
 	public void onChunkLoad(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
 		if (chunk.getInhabitedTime() > 10000) {
-			MSG.announce("Chunk inhabitation time is " + chunk.getInhabitedTime());
+			plugin.log("Chunk inhabitation time at " + chunk.getX() + " " + chunk.getZ() + " is "
+					+ chunk.getInhabitedTime() + " which is preventing blaze spawns.");
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class CustomBlaze extends BehaviorListener {
 			if (random.nextDouble() > .02)
 				continue;
 			b.getLocation().getWorld().spawnEntity(b.getLocation(), EntityType.BLAZE);
-			MSG.announce("Spawned blaze at " + b.getLocation().getBlockX() + " " + b.getLocation().getBlockY() + " "
+			plugin.log("Spawned blaze at " + b.getLocation().getBlockX() + " " + b.getLocation().getBlockY() + " "
 					+ b.getLocation().getBlockZ());
 		}
 	}

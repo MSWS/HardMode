@@ -59,9 +59,7 @@ public class CustomWitch extends BehaviorListener {
 		if (event.getEntity() == null || !event.getEntity().isValid())
 			return;
 		Witch witch = (Witch) event.getEntity();
-
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-
 		ItemStack potion = new ItemStack(Material.POTION);
 
 		boolean hasPotion = false;
@@ -74,16 +72,15 @@ public class CustomWitch extends BehaviorListener {
 			break;
 		}
 
-		if (!hasPotion) {
+		if (!hasPotion)
 			return;
-		}
 
 		witch.setDrinkingPotion(potion);
 	}
 
 	@Override
 	public void disable() {
-
+		EntityTargetLivingEntityEvent.getHandlerList().unregister(this);
 	}
 
 }

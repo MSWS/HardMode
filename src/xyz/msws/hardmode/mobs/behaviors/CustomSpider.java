@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
-import xyz.msws.hardmode.utils.MSG;
 
 public class CustomSpider extends BehaviorListener {
 
@@ -73,8 +72,7 @@ public class CustomSpider extends BehaviorListener {
 
 		if (event.getTarget() == null)
 			return;
-		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
-			MSG.announce("Runnable started (targetting " + event.getTarget() + ").");
+		plugin.log("Spider runnable started targetting " + event.getTarget() + ".");
 
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 
@@ -85,6 +83,7 @@ public class CustomSpider extends BehaviorListener {
 			public void run() {
 				if (spider == null || !spider.isValid() || spider.getTarget() == null || !spider.getTarget().isValid()
 						|| !spider.getTarget().equals(event.getTarget())) {
+					plugin.log("Spider runnable ended.");
 					this.cancel();
 					return;
 				}

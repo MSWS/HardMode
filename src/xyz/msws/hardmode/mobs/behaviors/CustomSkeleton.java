@@ -35,7 +35,6 @@ public class CustomSkeleton extends BehaviorListener {
 		super(plugin);
 
 		selector = new MobSelector() {
-
 			@Override
 			public boolean matches(Entity ent) {
 				return (ent.getType() == EntityType.SKELETON || ent.getType() == EntityType.STRAY);

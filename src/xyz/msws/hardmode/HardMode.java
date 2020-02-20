@@ -1,6 +1,9 @@
 package xyz.msws.hardmode;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,16 +28,27 @@ import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.debug.DebugModule;
 import xyz.msws.hardmode.modules.mobs.MobManager;
 
-public class HardMode extends JavaPlugin implements MPlugin {
+public class HardMode extends JavaPlugin {
 	private Set<AbstractModule> modules = new HashSet<>();
 
 	private Saveable data;
 
 	private MobManager mobManager;
 
+	private File logFile;
+
 	@Override
 	public void onEnable() {
 		saveResource("config.yml", false);
+
+		new File(getDataFolder(), "logs").mkdirs();
+		logFile = new File(getDataFolder(), "logs/" + System.currentTimeMillis() + ".log");
+
+		try {
+			logFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		if (getConfig().getBoolean("SQL.Enabled")) {
 			modules.add(new ConnectionManager(this));
@@ -61,6 +75,10 @@ public class HardMode extends JavaPlugin implements MPlugin {
 
 	public Saveable getData() {
 		return this.data;
+	}
+
+	public File getLogFile() {
+		return logFile;
 	}
 
 	@Override
@@ -121,6 +139,16 @@ public class HardMode extends JavaPlugin implements MPlugin {
 
 	public MobManager getMobManager() {
 		return this.mobManager;
+	}
+
+	public void log(String line) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			writer.write(line + "\n");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
