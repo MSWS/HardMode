@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
@@ -51,7 +52,7 @@ public class CustomCreeper extends BehaviorListener {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		if (random.nextDouble() > .05 && !creeper.isPowered())
 			return;
-		plugin.getMobManager().getAttack("tnt").attack(creeper, creeper);
+		plugin.getMobManager().getAttack(AID.TNT).attack(creeper, creeper);
 	}
 
 	@EventHandler

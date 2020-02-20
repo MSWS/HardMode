@@ -12,9 +12,11 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.MSG;
 
 public class FastArrowAttack implements Attack {
 
+	@SuppressWarnings("unused")
 	private HardMode plugin;
 
 	public FastArrowAttack(HardMode plugin) {
@@ -33,24 +35,33 @@ public class FastArrowAttack implements Attack {
 
 		Location current = attacker instanceof LivingEntity ? ((LivingEntity) entity).getEyeLocation()
 				: attacker.getLocation();
-		aim = target instanceof LivingEntity ? ((LivingEntity) target).getEyeLocation().toVector()
+		aim = target instanceof LivingEntity
+				? ((LivingEntity) target).getEyeLocation().toVector().subtract(current.toVector()).normalize()
 				: target.getLocation().toVector().subtract(current.toVector()).normalize();
 		int particles = 0;
-		double lastDist = Double.MAX_VALUE, currentDist = 0;
+		double lastDist = 0, currentDist = 0;
 
 		// If current dist > lastDist then we have gone PAST the target
-		while (currentDist < lastDist && particles < 200) {
-			current.getWorld().spawnParticle(Particle.FLAME, current, 0);
-			if (current.getBlock().getType().isSolid())
-				return;
-			if (currentDist != 0)
-				lastDist = currentDist;
+		while (currentDist <= lastDist && particles < 200) {
+			lastDist = current.distanceSquared(target.getLocation());
 			current.add(aim.clone().multiply(1.0 / 2.0));
 			currentDist = current.distanceSquared(target.getLocation());
+
+			current.getWorld().spawnParticle(Particle.FLAME, current, 0);
+			if (current.getBlock().getType().isSolid()) {
+				return;
+			}
 			particles++;
 		}
+		MSG.announce(particles + "");
+
 		if (particles >= 200)
-			plugin.log("FastArrowAttack reached max particle amount (" + particles + ")");
+			MSG.announce("FastArrowAttack reached max particle amount (" + particles + ")");
+	}
+
+	@Override
+	public AID getID() {
+		return AID.FAST_ARROW;
 	}
 
 }

@@ -98,4 +98,9 @@ public class WebAttack implements Attack {
 		}.runTaskTimer(plugin, 5, 1);
 	}
 
+	@Override
+	public AID getID() {
+		return AID.WEB;
+	}
+
 }

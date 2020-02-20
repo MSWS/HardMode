@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.attacks.Attack;
+import xyz.msws.hardmode.attacks.BlockItemThrowAttack;
+import xyz.msws.hardmode.attacks.BlockPhysicThrowAttack;
 import xyz.msws.hardmode.attacks.FastArrowAttack;
 import xyz.msws.hardmode.attacks.GrabTeleportAttack;
 import xyz.msws.hardmode.attacks.TNTAttack;
 import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
+import xyz.msws.hardmode.mobs.behaviors.CustomEnderman;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
 import xyz.msws.hardmode.mobs.behaviors.CustomSpider;
 import xyz.msws.hardmode.mobs.behaviors.CustomWitch;
@@ -27,27 +31,29 @@ public class MobManager extends AbstractModule {
 	}
 
 	private List<BehaviorListener> behaviors;
-	private Map<String, Attack> attacks;
+	private Map<AID, Attack> attacks;
 
 	@Override
 	public void initialize() {
-		attacks = new HashMap<String, Attack>();
+		attacks = new HashMap<AID, Attack>();
 
 		loadAttacks();
 
 		behaviors = Arrays.asList(new CustomCreeper(plugin), new CustomSkeleton(plugin), new CustomZombie(plugin),
-				new CustomSpider(plugin), new CustomBlaze(plugin), new CustomWitch(plugin), new GlobalMobs(plugin));
+				new CustomSpider(plugin), new CustomBlaze(plugin), new CustomWitch(plugin), new CustomEnderman(plugin),
+				new GlobalMobs(plugin));
 	}
 
 	public void loadAttacks() {
-//		attacks.put("web", new WebAttack(plugin));
-		attacks.put("fastarrow", new FastArrowAttack(plugin));
-		attacks.put("tnt", new TNTAttack(plugin));
-		attacks.put("grabteleport", new GrabTeleportAttack(plugin));
+		attacks.put(AID.FAST_ARROW, new FastArrowAttack(plugin));
+		attacks.put(AID.TNT, new TNTAttack(plugin));
+		attacks.put(AID.GRAB_TELEPORT, new GrabTeleportAttack(plugin));
+		attacks.put(AID.BLOCK_ITEM_THROW, new BlockItemThrowAttack(plugin));
+		attacks.put(AID.BLOCK_PHYSIC_THROW, new BlockPhysicThrowAttack(plugin));
 	}
 
-	public Attack getAttack(String id) {
-		return attacks.get(id);
+	public Attack getAttack(AID attack) {
+		return attacks.get(attack);
 	}
 
 	@Override

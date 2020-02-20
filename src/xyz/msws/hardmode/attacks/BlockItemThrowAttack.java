@@ -17,11 +17,11 @@ import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
 
-public class BlockThrowAttack implements Attack {
+public class BlockItemThrowAttack implements Attack {
 
 	private HardMode plugin;
 
-	public BlockThrowAttack(HardMode plugin) {
+	public BlockItemThrowAttack(HardMode plugin) {
 		this.plugin = plugin;
 	}
 
@@ -99,6 +99,11 @@ public class BlockThrowAttack implements Attack {
 			}
 		}.runTaskTimer(plugin, 5, 1);
 
+	}
+
+	@Override
+	public AID getID() {
+		return AID.BLOCK_ITEM_THROW;
 	}
 
 }

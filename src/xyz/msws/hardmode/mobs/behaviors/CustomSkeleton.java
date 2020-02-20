@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
@@ -79,7 +80,7 @@ public class CustomSkeleton extends BehaviorListener {
 					return;
 				}
 
-				plugin.getMobManager().getAttack("fastarrow").attack(skeleton, target);
+				plugin.getMobManager().getAttack(AID.FAST_ARROW).attack(skeleton, target);
 			}
 		};
 	}

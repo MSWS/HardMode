@@ -50,4 +50,9 @@ public class TNTAttack implements Attack {
 		}.runTaskTimer(plugin, 1, 1);
 
 	}
+
+	@Override
+	public AID getID() {
+		return AID.TNT;
+	}
 }

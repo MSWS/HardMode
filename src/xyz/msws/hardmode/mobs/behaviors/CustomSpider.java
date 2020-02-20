@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
@@ -76,9 +77,9 @@ public class CustomSpider extends BehaviorListener {
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
 			plugin.log("Spider runnable started targetting " + event.getTarget() + ".");
 
-		ThreadLocalRandom random = ThreadLocalRandom.current();
-
 		new BukkitRunnable() {
+			ThreadLocalRandom random = ThreadLocalRandom.current();
+
 			long nextShot = System.currentTimeMillis();
 
 			@Override
@@ -92,7 +93,8 @@ public class CustomSpider extends BehaviorListener {
 				if (System.currentTimeMillis() < nextShot)
 					return;
 				nextShot += random.nextDouble(500, 6000);
-				plugin.getMobManager().getAttack("blockthrow").attack(spider, event.getTarget(), Material.COBWEB);
+				plugin.getMobManager().getAttack(AID.BLOCK_ITEM_THROW).attack(spider, event.getTarget(),
+						Material.COBWEB);
 			}
 		}.runTaskTimer(plugin, 20, 1);
 	}

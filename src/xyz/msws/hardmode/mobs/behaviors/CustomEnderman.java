@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -20,6 +21,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,6 +29,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
 
@@ -81,7 +84,7 @@ public class CustomEnderman extends BehaviorListener {
 	}
 
 	public BukkitRunnable chuck(Enderman ender, Entity target) {
-		ThreadLocalRandom random = ThreadLocalRandom.current();
+//		ThreadLocalRandom random = ThreadLocalRandom.current();
 		return new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -104,7 +107,7 @@ public class CustomEnderman extends BehaviorListener {
 					below.setType(Material.AIR);
 					return;
 				}
-				plugin.getMobManager().getAttack("blockthrow").attack(ender, target, mat);
+				plugin.getMobManager().getAttack(AID.BLOCK_PHYSIC_THROW).attack(ender, target, mat);
 				ender.getWorld().playSound(ender.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, 2, 1);
 				ender.setCarriedBlock(null);
 			}
@@ -115,10 +118,19 @@ public class CustomEnderman extends BehaviorListener {
 	public void grabAndTeleport(EntityDamageByEntityEvent event) {
 		if (!selector.matches(event.getDamager()))
 			return;
-		if (random.nextDouble() > .3)
+
+		double chance = .6;
+
+		if (event.getEntity() instanceof Player) {
+			if (((Player) event.getEntity()).isBlocking())
+				chance = .85;
+		}
+
+		if (random.nextDouble() > chance)
 			return;
+
 		Enderman ender = (Enderman) event.getDamager();
-		plugin.getMobManager().getAttack("grabteleport").attack(ender, event.getDamager());
+		plugin.getMobManager().getAttack(AID.GRAB_TELEPORT).attack(ender, event.getEntity());
 	}
 
 	@EventHandler
@@ -129,19 +141,32 @@ public class CustomEnderman extends BehaviorListener {
 
 		Enderman ender = (Enderman) event.getEntity();
 
+		if (random.nextDouble() > .4)
+			return;
+
 		if (ender.getLocation().distanceSquared(damager.getLocation()) > 25)
 			return;
 
 		Vector direction = damager.getLocation().clone().getDirection().normalize();
-		direction.multiply(-1);
+		direction.multiply(random.nextDouble(-3, -1));
 		direction.multiply(ender.getLocation().distance(damager.getLocation()));
 		Location destination = ender.getLocation().clone().toVector().add(direction).toLocation(ender.getWorld());
 		ender.teleport(destination);
 	}
 
+	@EventHandler
+	public void onSpawn(EntitySpawnEvent event) {
+		if (!selector.matches(event.getEntity()))
+			return;
+		Enderman ender = (Enderman) event.getEntity();
+		ender.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(5.5);
+	}
+
 	@Override
 	public void disable() {
-
+		EntityTargetLivingEntityEvent.getHandlerList().unregister(this);
+		EntityDamageByEntityEvent.getHandlerList().unregister(this);
+		EntitySpawnEvent.getHandlerList().unregister(this);
 	}
 
 }
