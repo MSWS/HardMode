@@ -58,7 +58,8 @@ public class CustomSkeleton extends BehaviorListener {
 		}
 
 		if (event.getTarget() == null && skeleton.getTarget() != null)
-			if (skeleton.getTarget().isValid()) {
+			if (skeleton.getTarget().isValid()
+					&& skeleton.getLocation().distanceSquared(skeleton.getTarget().getLocation()) <= 2500) {
 				event.setTarget(skeleton.getTarget());
 				if (tasks.containsKey(skeleton))
 					return;

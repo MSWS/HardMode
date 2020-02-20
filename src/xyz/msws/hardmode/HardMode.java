@@ -30,6 +30,8 @@ public class HardMode extends JavaPlugin implements MPlugin {
 
 	private Saveable data;
 
+	private MobManager mobManager;
+
 	@Override
 	public void onEnable() {
 		saveResource("config.yml", false);
@@ -47,7 +49,8 @@ public class HardMode extends JavaPlugin implements MPlugin {
 
 		modules.add(new CommandModule(this));
 		modules.add(new InteractionModule(this));
-		modules.add(new MobManager(this));
+		mobManager = new MobManager(this);
+		modules.add(mobManager);
 
 		modules.add(new DebugModule(this));
 
@@ -114,6 +117,10 @@ public class HardMode extends JavaPlugin implements MPlugin {
 
 	public Set<AbstractModule> getModules() {
 		return modules;
+	}
+
+	public MobManager getMobManager() {
+		return this.mobManager;
 	}
 
 }

@@ -1,13 +1,18 @@
 package xyz.msws.hardmode.modules.mobs;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.mobs.behaviors.Attack;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
+import xyz.msws.hardmode.mobs.behaviors.CustomSpider;
 import xyz.msws.hardmode.mobs.behaviors.CustomZombie;
 import xyz.msws.hardmode.mobs.behaviors.GlobalMobs;
+import xyz.msws.hardmode.mobs.behaviors.WebAttack;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 
@@ -18,11 +23,24 @@ public class MobManager extends AbstractModule {
 	}
 
 	private List<BehaviorListener> behaviors;
+	private Map<String, Attack> attacks;
 
 	@Override
 	public void initialize() {
+		attacks = new HashMap<String, Attack>();
+
+		loadAttacks();
+
 		behaviors = Arrays.asList(new CustomCreeper(plugin), new CustomSkeleton(plugin), new CustomZombie(plugin),
-				new GlobalMobs(plugin));
+				new CustomSpider(plugin), new GlobalMobs(plugin));
+	}
+
+	public void loadAttacks() {
+		attacks.put("web", new WebAttack(plugin));
+	}
+
+	public Attack getAttack(String id) {
+		return attacks.get(id);
 	}
 
 	@Override
