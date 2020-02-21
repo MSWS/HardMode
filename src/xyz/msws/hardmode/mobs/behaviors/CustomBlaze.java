@@ -70,7 +70,7 @@ public class CustomBlaze extends BehaviorListener {
 
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				for (int y = chunk.getWorld().getSeaLevel(); y < 256; y++) {
+				for (int y = 200; y > chunk.getWorld().getSeaLevel(); y--) {
 					Block block = chunk.getBlock(x, y, z);
 					if (!block.isLiquid())
 						continue;

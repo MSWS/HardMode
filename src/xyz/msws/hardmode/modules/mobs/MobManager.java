@@ -10,6 +10,7 @@ import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.attacks.Attack;
 import xyz.msws.hardmode.attacks.BlockItemThrowAttack;
 import xyz.msws.hardmode.attacks.BlockPhysicThrowAttack;
+import xyz.msws.hardmode.attacks.ChargeAtAttack;
 import xyz.msws.hardmode.attacks.FastArrowAttack;
 import xyz.msws.hardmode.attacks.FireballAttack;
 import xyz.msws.hardmode.attacks.GrabSlamAttack;
@@ -19,6 +20,7 @@ import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
 import xyz.msws.hardmode.mobs.behaviors.CustomEnderman;
 import xyz.msws.hardmode.mobs.behaviors.CustomGhast;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
+import xyz.msws.hardmode.mobs.behaviors.CustomSlime;
 import xyz.msws.hardmode.mobs.behaviors.CustomSpider;
 import xyz.msws.hardmode.mobs.behaviors.CustomWitch;
 import xyz.msws.hardmode.mobs.behaviors.CustomZombie;
@@ -43,7 +45,7 @@ public class MobManager extends AbstractModule {
 
 		behaviors = Arrays.asList(new CustomCreeper(plugin), new CustomSkeleton(plugin), new CustomZombie(plugin),
 				new CustomSpider(plugin), new CustomBlaze(plugin), new CustomWitch(plugin), new CustomEnderman(plugin),
-				new CustomGhast(plugin), new GlobalMobs(plugin));
+				new CustomGhast(plugin), new CustomSlime(plugin), new GlobalMobs(plugin));
 	}
 
 	public void loadAttacks() {
@@ -53,6 +55,7 @@ public class MobManager extends AbstractModule {
 		attacks.put(AID.BLOCK_ITEM_THROW, new BlockItemThrowAttack(plugin));
 		attacks.put(AID.BLOCK_PHYSIC_THROW, new BlockPhysicThrowAttack(plugin));
 		attacks.put(AID.FIREBALL, new FireballAttack(plugin));
+		attacks.put(AID.CHARGE_AT, new ChargeAtAttack(plugin));
 	}
 
 	public Attack getAttack(AID attack) {
