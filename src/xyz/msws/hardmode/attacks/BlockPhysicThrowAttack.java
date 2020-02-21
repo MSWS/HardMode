@@ -40,16 +40,15 @@ public class BlockPhysicThrowAttack implements Attack {
 
 		FallingBlock fall = attacker.getWorld().spawnFallingBlock(attacker.getLocation(),
 				Bukkit.createBlockData(material));
-//
-//		Item item = attacker.getWorld().dropItem(attacker.getLocation(), new ItemStack(material));
-//		item.setPickupDelay(999999);
-		Vector aim = target.getLocation().toVector().subtract(attacker.getLocation().toVector());
+
+		Vector aim = target.getLocation().clone().add(0, 1, 0).toVector().subtract(attacker.getLocation().toVector());
 		aim.multiply(.8);
 		aim.setY(aim.getY() * 1.2);
 		fall.setVelocity(aim);
 		fall.setHurtEntities(true);
 
 		new BukkitRunnable() {
+			long lastHit = 0;
 
 			@Override
 			public void run() {
@@ -57,11 +56,15 @@ public class BlockPhysicThrowAttack implements Attack {
 					this.cancel();
 					return;
 				}
+				if (System.currentTimeMillis() - lastHit < 100)
+					return;
 				for (Entity ent : fall.getLocation().getNearbyEntities(2, 2, 2)) {
 					if (ent.equals(attacker))
 						continue;
 					if (!(ent instanceof LivingEntity))
 						continue;
+
+					lastHit = System.currentTimeMillis();
 					LivingEntity e = (LivingEntity) ent;
 					e.damage(8, e);
 					e.getWorld().playSound(e.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, .1f);

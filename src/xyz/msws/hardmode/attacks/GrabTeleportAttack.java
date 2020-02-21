@@ -18,6 +18,8 @@ public class GrabTeleportAttack implements Attack {
 
 	@Override
 	public void attack(Entity attacker, Entity target) {
+		if (attacker.equals(target))
+			return;
 		if (!attacker.addPassenger(target))
 			return;
 

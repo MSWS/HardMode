@@ -84,7 +84,6 @@ public class CustomEnderman extends BehaviorListener {
 	}
 
 	public BukkitRunnable chuck(Enderman ender, Entity target) {
-//		ThreadLocalRandom random = ThreadLocalRandom.current();
 		return new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -125,6 +124,9 @@ public class CustomEnderman extends BehaviorListener {
 			if (((Player) event.getEntity()).isBlocking())
 				chance = .85;
 		}
+
+		if (event.getDamager().equals(event.getEntity()))
+			return;
 
 		if (random.nextDouble() > chance)
 			return;
