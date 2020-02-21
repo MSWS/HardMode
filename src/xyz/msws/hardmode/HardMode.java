@@ -22,6 +22,7 @@ import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.inventory.InteractionModule;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
+import xyz.msws.hardmode.modules.combat.OldPVPModule;
 import xyz.msws.hardmode.modules.commands.CommandModule;
 import xyz.msws.hardmode.modules.data.ConnectionManager;
 import xyz.msws.hardmode.modules.data.DataManager;
@@ -65,6 +66,8 @@ public class HardMode extends JavaPlugin {
 		modules.add(new InteractionModule(this));
 		mobManager = new MobManager(this);
 		modules.add(mobManager);
+
+		modules.add(new OldPVPModule(this));
 
 		modules.add(new DebugModule(this));
 

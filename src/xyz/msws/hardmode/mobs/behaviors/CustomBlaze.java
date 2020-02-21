@@ -66,12 +66,6 @@ public class CustomBlaze extends BehaviorListener {
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
-		if (chunk.getInhabitedTime() > 10000) {
-			plugin.log("Chunk inhabitation time at " + chunk.getX() + " " + chunk.getZ() + " is "
-					+ chunk.getInhabitedTime() + " which is preventing blaze spawns.");
-			return;
-		}
-
 		List<Block> lava = new ArrayList<Block>();
 
 		for (int x = 0; x < 16; x++) {
