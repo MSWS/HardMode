@@ -8,11 +8,11 @@ import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
 
-public class GrabTeleportAttack implements Attack {
+public class GrabSlamAttack implements Attack {
 
 	private HardMode plugin;
 
-	public GrabTeleportAttack(HardMode plugin) {
+	public GrabSlamAttack(HardMode plugin) {
 		this.plugin = plugin;
 	}
 
@@ -37,6 +37,10 @@ public class GrabTeleportAttack implements Attack {
 
 				if (System.currentTimeMillis() - grabTime > 400 && !teleported) {
 					teleported = true;
+					if (!attacker.getPassengers().contains(target)) {
+						this.cancel();
+						return;
+					}
 					Vector up = attacker.getVelocity().clone();
 					up.setY(2.5);
 					attacker.setVelocity(up);
@@ -64,7 +68,7 @@ public class GrabTeleportAttack implements Attack {
 
 	@Override
 	public AID getID() {
-		return AID.GRAB_TELEPORT;
+		return AID.GRAB_SLAM;
 	}
 
 }

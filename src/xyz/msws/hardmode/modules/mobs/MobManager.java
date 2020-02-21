@@ -12,7 +12,7 @@ import xyz.msws.hardmode.attacks.BlockItemThrowAttack;
 import xyz.msws.hardmode.attacks.BlockPhysicThrowAttack;
 import xyz.msws.hardmode.attacks.FastArrowAttack;
 import xyz.msws.hardmode.attacks.FireballAttack;
-import xyz.msws.hardmode.attacks.GrabTeleportAttack;
+import xyz.msws.hardmode.attacks.GrabSlamAttack;
 import xyz.msws.hardmode.attacks.TNTAttack;
 import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
@@ -49,7 +49,7 @@ public class MobManager extends AbstractModule {
 	public void loadAttacks() {
 		attacks.put(AID.FAST_ARROW, new FastArrowAttack(plugin));
 		attacks.put(AID.TNT, new TNTAttack(plugin));
-		attacks.put(AID.GRAB_TELEPORT, new GrabTeleportAttack(plugin));
+		attacks.put(AID.GRAB_SLAM, new GrabSlamAttack(plugin));
 		attacks.put(AID.BLOCK_ITEM_THROW, new BlockItemThrowAttack(plugin));
 		attacks.put(AID.BLOCK_PHYSIC_THROW, new BlockPhysicThrowAttack(plugin));
 		attacks.put(AID.FIREBALL, new FireballAttack(plugin));

@@ -132,7 +132,7 @@ public class CustomEnderman extends BehaviorListener {
 			return;
 
 		Enderman ender = (Enderman) event.getDamager();
-		plugin.getMobManager().getAttack(AID.GRAB_TELEPORT).attack(ender, event.getEntity());
+		plugin.getMobManager().getAttack(AID.GRAB_SLAM).attack(ender, event.getEntity());
 	}
 
 	@EventHandler
