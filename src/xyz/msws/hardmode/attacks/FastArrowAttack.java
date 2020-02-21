@@ -26,7 +26,7 @@ public class FastArrowAttack implements Attack {
 	@Override
 	public void attack(Entity attacker, Entity target) {
 		Vector aim = target.getLocation().toVector().subtract(attacker.getLocation().toVector());
-		aim.normalize().multiply(3);
+		aim.multiply(.3);
 		Preconditions.checkArgument(ProjectileSource.class.isAssignableFrom(attacker.getClass()),
 				attacker.getType() + " is not a projectile source");
 		ProjectileSource entity = (ProjectileSource) attacker;

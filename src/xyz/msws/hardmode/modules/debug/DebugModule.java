@@ -8,15 +8,19 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
 import xyz.msws.hardmode.utils.MSG;
@@ -69,6 +73,37 @@ public class DebugModule extends AbstractModule implements Listener {
 		OfflinePlayer target = args.length == 1 ? Bukkit.getOfflinePlayer(args[0]) : player, ft;
 
 		switch (event.getMessage().split(" ")[0].toLowerCase()) {
+		case "kit":
+			if (!target.isOnline()) {
+				MSG.tell(player, "Debug", MSG.PLAYER + target.getName() + MSG.DEFAULT + " is offline.");
+				return;
+			}
+
+			String kit = args.length == 2 ? args[1].toUpperCase() : "DIAMOND";
+
+			List<String> items = Arrays.asList("%_HELMET", "%_CHESTPLATE", "%_LEGGINGS", "%_BOOTS", "%_SWORD");
+
+			items = items.stream().map(s -> s.replace("%", kit)).collect(Collectors.toList());
+
+			List<ItemStack> itemStacks = items.stream().map(s -> new ItemStack(Material.valueOf(s)))
+					.collect(Collectors.toList());
+
+			itemStacks.add(new CItem(Material.BOW).enchantment(Enchantment.ARROW_INFINITE, 1).build());
+			itemStacks.add(new CItem(Material.COOKED_CHICKEN).amount(64).build());
+			itemStacks.add(new CItem(Material.ARROW).build());
+
+			Player equip = target.getPlayer();
+			equip.getInventory().clear();
+
+			ItemStack[] armor = new ItemStack[4];
+			for (int i = 0; i < 4; i++)
+				armor[i] = itemStacks.get(3 - i);
+			equip.getEquipment().setArmorContents(armor);
+			for (int i = 4; i < itemStacks.size(); i++)
+				equip.getInventory().addItem(itemStacks.get(i));
+
+			equip.getEquipment().setItemInOffHand(new ItemStack(Material.SHIELD));
+			break;
 		case "say":
 			event.setCancelled(false);
 			event.setMessage(String.join(" ", args));

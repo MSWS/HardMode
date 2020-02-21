@@ -42,9 +42,9 @@ public class GrabTeleportAttack implements Attack {
 					attacker.setVelocity(up);
 				}
 
-				if (attacker.getLocation().getY() > lastY || System.currentTimeMillis() - grabTime < 500) {
+				if (target.getLocation().getY() > lastY || System.currentTimeMillis() - grabTime < 500) {
 					// We are still climbing up
-					lastY = attacker.getLocation().getY();
+					lastY = target.getLocation().getY();
 					return;
 				}
 				attacker.removePassenger(target);

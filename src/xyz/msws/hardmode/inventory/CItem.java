@@ -141,7 +141,7 @@ public class CItem implements ConfigurationSerializable, CData {
 	}
 
 	public CItem enchantment(Enchantment ench, int level) {
-		item.addUnsafeEnchantment(ench, level);
+		meta.addEnchant(ench, level, true);
 		return this;
 	}
 
