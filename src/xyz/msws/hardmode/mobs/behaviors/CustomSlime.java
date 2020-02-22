@@ -89,9 +89,8 @@ public class CustomSlime extends BehaviorListener {
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
 		LivingEntity entity = (LivingEntity) event.getEntity();
-		entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, CE.SLIME_SLOWATTACK_DURATION.intValue(),
-				random.nextInt(CE.SLIME_SLOWATTACK_POWER_MINIMUM.intValue(),
-						CE.SLIME_SLOWATTACK_POWER_MAXIMUM.intValue())));
+		entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, CE.SLIME_SLOWATTACK_DURATION.intValue(), random
+				.nextInt(CE.SLIME_SLOWATTACK_POWER_MINIMUM.intValue(), CE.SLIME_SLOWATTACK_POWER_MAXIMUM.intValue())));
 	}
 
 	public BukkitRunnable charge(Slime slime, Entity target) {

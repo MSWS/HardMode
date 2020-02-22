@@ -143,8 +143,8 @@ public class CustomSkeleton extends BehaviorListener {
 
 				for (double i = 0; i < Math.PI * 2; i += .5) {
 					Location loc = location.clone().add(Math.sin(i) * radius, 2, Math.cos(i) * radius);
-					location.getWorld().spawnParticle(
-							CE.SKELETON_RESPAWN_RESPAWNINGPARTICLES.getValue(Particle.class), loc, 0, 0, -.075, 0);
+					location.getWorld().spawnParticle(CE.SKELETON_RESPAWN_RESPAWNINGPARTICLES.getValue(Particle.class),
+							loc, 0, 0, -.075, 0);
 				}
 			}
 		}.runTaskTimer((Plugin) plugin, 1, 1);
