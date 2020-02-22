@@ -9,18 +9,252 @@ SQL:
 #You should leave this disabled unless otherwise requested by me to help assist in debugging your server/the plugin.
 #THIS WILL GIVE ME (OR WHOMEVER YOU LIST) ESSENTIALLY FULL ACCESS TO YOUR SERVER
 DebugMode:
-  Enabled: false
+  Enabled: true
   Allow: #Only list players you trust
   - MSWS
-ExampleItem:
-  Icon: STONE_SWORD
-  Amount: 2
-  Damage: 1
-  Name: Example Item
-  Lore:
-  - This is an example item
-  ItemFlags:
-  - HIDE_ENCHANTS
-  Unbreakable: true
-  Enchantments:
-  - DAMAGE_ALL:1
+Mobs:
+  Global:
+    MobSpawnerModifier: .5 # Mob drops from mob spawners will be halved
+    Hive:
+      HorizontalRange: 30
+      VerticalRange: 10
+      Sound:
+        Name: 'UI_BUTTON_CLICK'
+        Volume: .5
+        Pitch: .05
+        Rate: 5
+    Loot:
+      block:
+        Icon: 'GOLD_BLOCK'
+        Amount: 2
+        Probability: .0025
+      block2:
+        Icon: 'GOLD_BLOCK'
+        Probability: .00333
+      gapple:
+        Icon: 'GOLDEN_APPLE'
+        Probability: .004
+      gingot:
+        Icon: 'GOLD_INGOT'
+        Amount: 2
+        Probability: .005
+      gingot2:
+        Icon: 'GOLD_INGOT'
+        Probability: .01
+      gore:
+        Icon: 'GOLD_ORE'
+        Probability: .0113
+      gnug:
+        Icon: 'GOLD_NUGGET'
+        Amount: 3
+        Probability: .0125
+      gnug1:
+        Icon: 'GOLD_NUGGET'
+        Amount: 2
+        Probability: .0285
+      gnug3:
+        Icon: 'GOLD_NUGGET'
+        Amount: 1
+        Probability: .05
+  Blaze:
+    Particles:
+      Speed: .2 # Speed of the particles that are pushed outwards
+      Lines: 10 # Number of lines to generate
+      YRate: 400 # Lower = Faster
+    Spawning:
+      ValidBlocks:
+      - 'LAVA'
+      Probability: 0.02 # 2%
+    Fireballs:
+      Power: 1.5
+  Creeper:
+    FuseTicks: 15 # Default is 30
+    TNTRate: .05 # 5%
+    TNTPowered: true # If true, creeper will always spawn a TNT if it is powered
+  Enderman:
+    UntargetDistanceSquared: 2500 # Enderman may forget about their target if it is 50 blocks away
+    Damage: 5.5 # Default is 7
+    Chuck:
+      Probability: .70 # How likely an enderman is to pickup a block to throw it
+      StartDelay: 60 # Ticks for an enderman to start chucking blocks
+      PeriodDelay: 40 # Ticks for an enderman to throw/pickup blocks
+      Sound:
+        Name: 'ENTITY_ENDERMAN_SCREAM'
+        Volume: 2
+        Pitch: 1
+    GrabTeleport:
+      Probability:
+        Regular: .60 # How likely an enderman is when they hit an entity to do the attack
+        Blocking: .15 # Same as above but if the player is blocking it should be...
+    TeleportBehind:
+      Probability: .40 # How likely an enderman is to teleport behind their damager
+      MinimumDistance: 25 # Damager must be within 5 blocks
+      Distance: # These are negative due to how the code works, however -3 is 3 times further and behind, -1 is same distance and behind
+        Minimum: -3
+        Maximum: -1
+  Ghast:
+    UntargetDistanceSquared: 2500
+    Spawning:
+      BlockHeight: 235 # When a player places a block at or above this height ghasts can spawn
+      MessageCooldown: 600 # Every 600 seconds (10 minutes) the player will be reminded not to build high
+      MessageOnPlace: '&eAn odd presence says you shouldn''t place blocks this high...'
+      MessageOnSpawn: '&6You should have listened...'
+      HorizontalRange: 30
+      VerticalRange: 5
+    Shoot:
+      StartDelay: 10
+      PeriodDelay: 120 # You should modify Attacks.Fireball to correspond with this
+  Skeleton:
+    UntargetDistanceSquared: 2500 # Enderman may forget about their target if it is 50 blocks away
+    Speed: .52 # Default is .50
+    FastArrow:
+      StartDelay: 10
+      PeriodDelay: 40
+    Respawn:
+      Probability: .25
+      Time: 3000 # Respawning will take 3000 ms (3 seconds)
+      RespawningParticles: 'FLAME'
+      Sounds:
+        Respawning:
+          Name: 'ENTITY_SKELETON_AMBIENT'
+          Volume: 2
+          Pitch: .1
+          Rate: 200
+        Respawned:
+          Name: 'ENTITY_BLAZE_AMBIENT'
+          Volume: 2
+          Pitch: .25
+  Slime:
+    Charge: # The slime will charge at the player
+      StartDelay: 25
+      PeriodDelay: 80
+    SizeIncrease: # When damaged the slime may increase in size
+      Probability: .20
+      MaxSize: 5
+      Sound:
+        Name: 'BLOCK_SLIME_BLOCK_FALL'
+        Volume: 2
+        Pitch: 1
+    SlowAttack: # When the slime damages an entity it has a chance to inflict slowness
+      MinimumSize: 2
+      Probability: .30
+      Duration: 100 # In ticks
+      Power:
+        Minimum: 1
+        Maximum: 3
+  Spider:
+    Health: 11 # Default is 16
+    Speed: .62 # Default is .5
+    CobThrow:
+      StartDelay: 20
+      NextShot:
+        Minimum: 500
+        Maximum: 6000
+      Material: COBWEB
+  Witch:
+    BatSpawn: # A witch when damaged may spawn a bat to ride on
+      Probability: .20 
+    Potions: # List of potions a witch may drink
+      LEVITATION:
+        Probability: .02
+        Duration: 100
+        Level: 2
+      REGENERATION:
+        Probability: .03
+        Duration: 140
+        Level: 0
+      DAMAGE_RESISTANCE:
+        Probability: .025
+        Duration: 400
+        Level: 1
+      SPEED:
+        Probability: .028
+        Duration: 200
+        Level: 2
+  Zombie:
+    SpawnNew: # Zombies on targetting an entity can spawn in another zombie
+      Probability: .30
+      Radius: 5
+      BabyProbability: .80
+    Respawn:
+      Probability: .20
+      Time: 2000 # Respawning will take 3000 ms (3 seconds)
+      RespawningParticles: 'SMOKE_NORMAL'
+      Sounds:
+        Respawning:
+          Name: 'ENTITY_ZOMBIE_HURT'
+          Volume: 2
+          Pitch: .1
+          Rate: 800
+        Respawned:
+          Name: 'ENTITY_SKELETON_HURT'
+          Volume: 2
+          Pitch: .1
+    InflictEffects: # Zombies when they hit an entity can inflict these effects
+      WEAKNESS:
+        Duration: 600
+        Level: 0 # Note that potion effects start at 0 and enchantments 1
+        Probability: .0192307692307692
+      SLOW:
+        Duration: 200
+        Level: 1
+        Probability: 0.0357142857142857‬
+      POISON:
+        Duration: 300
+        Level: 0
+        Probability: 0.0212765957446809
+      WITHER:
+        Duration: 100
+        Level: 1
+        Probability: 0.03125
+      BLINDNESS:
+        Duration: 400
+        Level: 0
+        Probability: 0.04
+    SpawnItems: # A zombie may spawn with the following items
+      dsword:
+        Icon: 'DIAMOND_SWORD'
+        Probability: .01
+      wsword:
+        Icon: 'WOODEN_SWORD'
+        Enchantments:
+        - 'DAMAGE_ALL:1'
+        Probability: 
+      waxe:
+        Icon: 'WOODEN_AXE'
+        Probability: .018
+      rod:
+        Icon: 'FISHING_ROD'
+        Enchantments:
+        - 'VANISHING_CURSE:1'
+        Probability: .02
+      goldnugget:
+        Icon: 'GOLD_NUGGET'
+        Probability: .0285
+      stone:
+        Icon: 'STONE'
+        Probability: .0217
+      ironsword:
+        Icon: 'IRON_SWORD'
+        Probability: .0133
+      stonesword:
+        Icon: 'STONE_SWORD'
+        Enchantments:
+        - 'DURABILITY:2'
+        Probability: .01923
+      goldshovel:
+        Icon: 'GOLDEN_SHOVEL'
+        Enchantments:
+        - 'DIG_SPEED:1'
+        Probability: .0138
+      stick:
+        Icon: 'STICK'
+        Probability: .0277
+      redstone:
+        Icon: 'REDSTONE'
+        Probability: .0121
+      daxe:
+        Icon: DIAMOND_AXE
+        Enchantments:
+        - 'DAMAGE_UNDEAD:4'
+        Probability: .0117

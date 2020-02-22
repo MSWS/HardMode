@@ -22,6 +22,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomSpider extends BehaviorListener {
 
@@ -45,10 +46,8 @@ public class CustomSpider extends BehaviorListener {
 		if (!selector.matches(event.getEntity()))
 			return;
 		LivingEntity ent = (LivingEntity) event.getEntity();
-		ent.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-				.setBaseValue(ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() * .7);
-		ent.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
-				.setBaseValue(ent.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * 1.25);
+		ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(CE.SPIDER_HEALTH.doubleValue());
+		ent.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(CE.SPIDER_SPEED.doubleValue());
 	}
 
 	@EventHandler
@@ -92,11 +91,12 @@ public class CustomSpider extends BehaviorListener {
 				}
 				if (System.currentTimeMillis() < nextShot)
 					return;
-				nextShot += random.nextDouble(500, 6000);
+				nextShot += random.nextDouble(CE.SPIDER_COBTHROW_NEXTSHOT_MINIMUM.getValue(Number.class).longValue(),
+						CE.SPIDER_COBTHROW_NEXTSHOT_MAXIMUM.getValue(Number.class).longValue());
 				plugin.getMobManager().getAttack(AID.BLOCK_ITEM_THROW).attack(spider, event.getTarget(),
-						Material.COBWEB);
+						CE.SPIDER_COBTHROW_MATERIAL.getValue(Material.class));
 			}
-		}.runTaskTimer(plugin, 20, 1);
+		}.runTaskTimer(plugin, CE.SPIDER_COBTHROW_STARTDELAY.intValue(), 1);
 	}
 
 	@Override

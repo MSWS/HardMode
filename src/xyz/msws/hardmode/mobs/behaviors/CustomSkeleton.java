@@ -26,6 +26,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomSkeleton extends BehaviorListener {
 
@@ -55,8 +56,8 @@ public class CustomSkeleton extends BehaviorListener {
 		}
 
 		if (event.getTarget() == null && skeleton.getTarget() != null)
-			if (skeleton.getTarget().isValid()
-					&& skeleton.getLocation().distanceSquared(skeleton.getTarget().getLocation()) <= 2500) {
+			if (skeleton.getTarget().isValid() && skeleton.getLocation().distanceSquared(skeleton.getTarget()
+					.getLocation()) <= CE.SKELETON_UNTARGETDISTANCESQUARED.getValue(Number.class).doubleValue()) {
 				event.setTarget(skeleton.getTarget());
 				if (tasks.containsKey(skeleton))
 					return;
@@ -66,7 +67,10 @@ public class CustomSkeleton extends BehaviorListener {
 			return;
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
 			plugin.log("Skeleton runnable started targetting " + event.getTarget() + ".");
-		tasks.put(skeleton, shoot(skeleton, event.getTarget()).runTaskTimer((Plugin) plugin, 10, 40));
+		tasks.put(skeleton,
+				shoot(skeleton, event.getTarget()).runTaskTimer((Plugin) plugin,
+						CE.SKELETON_FASTARROW_STARTDELAY.getValue(Number.class).intValue(),
+						CE.SKELETON_FASTARROW_PERIODDELAY.getValue(Number.class).intValue()));
 	}
 
 	public BukkitRunnable shoot(Skeleton skeleton, LivingEntity target) {
@@ -98,10 +102,12 @@ public class CustomSkeleton extends BehaviorListener {
 		if (!selector.matches(event.getEntity()))
 			return;
 		Skeleton skeleton = (Skeleton) event.getEntity();
-		if (ThreadLocalRandom.current().nextDouble() < .6)
+		if (ThreadLocalRandom.current().nextDouble() > CE.SKELETON_RESPAWN_PROBABILITY.getValue(Number.class)
+				.doubleValue())
 			return;
 
-		respawn(skeleton.getLocation(), skeleton.getTarget(), 3000);
+		respawn(skeleton.getLocation(), skeleton.getTarget(),
+				CE.SKELETON_RESPAWN_TIME.getValue(Number.class).longValue());
 	}
 
 	public void respawn(Location location, LivingEntity target, long time) {
@@ -113,7 +119,10 @@ public class CustomSkeleton extends BehaviorListener {
 			public void run() {
 				if (System.currentTimeMillis() >= spawnTime) {
 					Skeleton newSkele = (Skeleton) location.getWorld().spawnEntity(location, EntityType.SKELETON);
-					location.getWorld().playSound(location, Sound.ENTITY_BLAZE_AMBIENT, 2, .25f);
+					location.getWorld().playSound(location,
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNED_NAME.getValue(Sound.class),
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNED_VOLUME.getValue(Number.class).floatValue(),
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNED_PITCH.getValue(Number.class).floatValue());
 					if (target != null && target.isValid())
 						newSkele.setTarget(target);
 
@@ -121,16 +130,21 @@ public class CustomSkeleton extends BehaviorListener {
 					return;
 				}
 
-				if (System.currentTimeMillis() - lastPlay > 200) {
+				if (System.currentTimeMillis() - lastPlay > CE.SKELETON_RESPAWN_SOUNDS_RESPAWNING_RATE
+						.getValue(Number.class).longValue()) {
 					lastPlay = System.currentTimeMillis();
-					location.getWorld().playSound(location, Sound.ENTITY_SKELETON_AMBIENT, 2, .1f);
+					location.getWorld().playSound(location,
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNING_NAME.getValue(Sound.class),
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNING_VOLUME.getValue(Number.class).floatValue(),
+							CE.SKELETON_RESPAWN_SOUNDS_RESPAWNING_PITCH.getValue(Number.class).floatValue());
 				}
 
 				double radius = .8;
 
 				for (double i = 0; i < Math.PI * 2; i += .5) {
 					Location loc = location.clone().add(Math.sin(i) * radius, 2, Math.cos(i) * radius);
-					location.getWorld().spawnParticle(Particle.FLAME, loc, 0, 0, -.075, 0);
+					location.getWorld().spawnParticle(
+							CE.SKELETON_RESPAWN_RESPAWNINGPARTICLES.getValue(Particle.class), loc, 0, 0, -.075, 0);
 				}
 			}
 		}.runTaskTimer((Plugin) plugin, 1, 1);

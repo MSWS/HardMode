@@ -32,6 +32,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomEnderman extends BehaviorListener {
 
@@ -68,8 +69,8 @@ public class CustomEnderman extends BehaviorListener {
 		}
 
 		if (event.getTarget() == null && ender.getTarget() != null)
-			if (ender.getTarget().isValid()
-					&& ender.getLocation().distanceSquared(ender.getTarget().getLocation()) <= 2500) {
+			if (ender.getTarget().isValid() && ender.getLocation().distanceSquared(ender.getTarget()
+					.getLocation()) <= CE.ENDERMAN_UNTARGETDISTANCESQUARED.getValue(Number.class).intValue()) {
 				event.setTarget(ender.getTarget());
 				if (tasks.containsKey(ender))
 					return;
@@ -80,7 +81,10 @@ public class CustomEnderman extends BehaviorListener {
 
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
 			plugin.log("Enderman runnable started targetting " + event.getTarget() + ".");
-		tasks.put(ender, chuck(ender, event.getTarget()).runTaskTimer((Plugin) plugin, 20 * 3, 40));
+		tasks.put(ender,
+				chuck(ender, event.getTarget()).runTaskTimer((Plugin) plugin,
+						CE.ENDERMAN_CHUCK_STARTDELAY.getValue(Number.class).intValue(),
+						CE.ENDERMAN_CHUCK_PERIODDELAY.getValue(Number.class).intValue()));
 	}
 
 	public BukkitRunnable chuck(Enderman ender, Entity target) {
@@ -96,7 +100,7 @@ public class CustomEnderman extends BehaviorListener {
 
 				Material mat = ender.getCarriedBlock() == null ? null : ender.getCarriedBlock().getMaterial();
 				if (mat == null || mat == Material.AIR) {
-					if (random.nextDouble() > .7)
+					if (random.nextDouble() > CE.ENDERMAN_CHUCK_PROBABILITY.getValue(Number.class).doubleValue())
 						return;
 					Block below = ender.getLocation().getBlock().getRelative(BlockFace.DOWN);
 					if (!canPickup.contains(below.getType()))
@@ -118,11 +122,11 @@ public class CustomEnderman extends BehaviorListener {
 		if (!selector.matches(event.getDamager()))
 			return;
 
-		double chance = .6;
+		double chance = CE.ENDERMAN_GRABTELEPORT_PROBABILITY_REGULAR.getValue(Number.class).doubleValue();
 
 		if (event.getEntity() instanceof Player) {
 			if (((Player) event.getEntity()).isBlocking())
-				chance = .85;
+				chance = CE.ENDERMAN_GRABTELEPORT_PROBABILITY_BLOCKING.getValue(Number.class).doubleValue();
 		}
 
 		if (event.getDamager().equals(event.getEntity()))
@@ -143,14 +147,17 @@ public class CustomEnderman extends BehaviorListener {
 
 		Enderman ender = (Enderman) event.getEntity();
 
-		if (random.nextDouble() > .4)
+		if (random.nextDouble() > CE.ENDERMAN_TELEPORTBEHIND_PROBABILITY.getValue(Number.class).doubleValue())
 			return;
 
-		if (ender.getLocation().distanceSquared(damager.getLocation()) > 25)
+		if (ender.getLocation().distanceSquared(damager.getLocation()) > CE.ENDERMAN_TELEPORTBEHIND_MINIMUMDISTANCE
+				.getValue(Number.class).doubleValue())
 			return;
 
 		Vector direction = damager.getLocation().clone().getDirection().normalize();
-		direction.multiply(random.nextDouble(-3, -1));
+		direction.multiply(
+				random.nextDouble(CE.ENDERMAN_TELEPORTBEHIND_DISTANCE_MINIMUM.getValue(Number.class).doubleValue(),
+						CE.ENDERMAN_TELEPORTBEHIND_DISTANCE_MAXIMUM.getValue(Number.class).doubleValue()));
 		direction.multiply(ender.getLocation().distance(damager.getLocation()));
 		Location destination = ender.getLocation().clone().toVector().add(direction).toLocation(ender.getWorld());
 		ender.teleport(destination);
@@ -161,7 +168,8 @@ public class CustomEnderman extends BehaviorListener {
 		if (!selector.matches(event.getEntity()))
 			return;
 		Enderman ender = (Enderman) event.getEntity();
-		ender.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(5.5);
+		ender.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
+				.setBaseValue(CE.ENDERMAN_DAMAGE.getValue(Number.class).doubleValue());
 	}
 
 	@Override

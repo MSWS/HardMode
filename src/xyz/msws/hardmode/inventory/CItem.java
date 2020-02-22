@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
@@ -45,7 +44,7 @@ public class CItem implements ConfigurationSerializable, CData {
 		this.meta = item.getItemMeta();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public CItem(Map<String, Object> data) {
 		this(Material.valueOf((String) data.get("Icon")));
 
@@ -65,7 +64,8 @@ public class CItem implements ConfigurationSerializable, CData {
 			unbreakable((boolean) data.get("Unbreakable"));
 		if (data.containsKey("Enchantments")) {
 			for (String e : (List<String>) data.get("Enchantments")) {
-				Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(e.split(":")[0].toUpperCase()));
+				Enchantment ench = Enchantment.getByName(e.split(":")[0].toUpperCase());
+//				Enchantment ench = EnchantmentWrapper.getByKey(NamespacedKey.minecraft(e.split(":")[0].toUpperCase()));
 				enchantment(ench, Integer.parseInt(e.split(":")[1]));
 			}
 		}

@@ -23,6 +23,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 import xyz.msws.hardmode.utils.MSG;
 
 public class CustomGhast extends BehaviorListener {
@@ -52,20 +53,24 @@ public class CustomGhast extends BehaviorListener {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
 
-		if (block.getY() < block.getWorld().getMaxHeight() - 30)
+		if (block.getY() < CE.GHAST_SPAWNING_BLOCKHEIGHT.getValue(Number.class).intValue())
 			return;
 
-		if (System.currentTimeMillis() - times.getOrDefault(player, (long) 0) > 60000 * 10) {
-			MSG.tell(player, "&eAn odd presence says you shouldn't place blocks this high...");
+		if (System.currentTimeMillis() - times.getOrDefault(player, (long) 0) > CE.GHAST_SPAWNING_MESSAGECOOLDOWN
+				.getValue(Number.class).doubleValue() * 1000) {
+			MSG.tell(player, CE.GHAST_SPAWNING_MESSAGEONPLACE.getValue(String.class));
 			times.put(player, System.currentTimeMillis());
 			return;
 		}
 
-		if (random.nextDouble() > .05)
+		if (random.nextDouble() > CE.GHAST_SHOOT_PROBABILITY.getValue(Number.class).doubleValue())
 			return;
-		MSG.tell(player, "&6You should have listened...");
+
+		MSG.tell(player, CE.GHAST_SPAWNING_MESSAGEONSPAWN.getValue(String.class));
 		Location spawn = block.getLocation().clone();
-		spawn.add(random.nextDouble(-30, 30), random.nextDouble(-5, 5), random.nextDouble(-30, 30));
+		double hDist = CE.GHAST_SPAWNING_HORIZONTALRANGE.getValue(Number.class).doubleValue();
+		double yDist = CE.GHAST_SPAWNING_VERTICALRANGE.getValue(Number.class).doubleValue();
+		spawn.add(random.nextDouble(-hDist, hDist), random.nextDouble(-yDist, yDist), random.nextDouble(-hDist, hDist));
 
 		spawn.getWorld().spawnEntity(spawn, EntityType.GHAST);
 	}
@@ -83,8 +88,8 @@ public class CustomGhast extends BehaviorListener {
 		}
 
 		if (event.getTarget() == null && ghast.getTarget() != null)
-			if (ghast.getTarget().isValid()
-					&& ghast.getLocation().distanceSquared(ghast.getTarget().getLocation()) <= 2500) {
+			if (ghast.getTarget().isValid() && ghast.getLocation().distanceSquared(ghast.getTarget()
+					.getLocation()) <= CE.GHAST_UNTARGETDISTANCESQUARED.getValue(Number.class).doubleValue()) {
 				event.setTarget(ghast.getTarget());
 				if (tasks.containsKey(ghast))
 					return;
@@ -94,7 +99,10 @@ public class CustomGhast extends BehaviorListener {
 			return;
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
 			plugin.log("Ghast runnable started targetting " + event.getTarget() + ".");
-		tasks.put(ghast, shoot(ghast, event.getTarget()).runTaskTimer((Plugin) plugin, 10, 120));
+		tasks.put(ghast,
+				shoot(ghast, event.getTarget()).runTaskTimer((Plugin) plugin,
+						CE.GHAST_SHOOT_STARTDELAY.getValue(Number.class).intValue(),
+						CE.GHAST_SHOOT_PERIODDELAY.getValue(Number.class).intValue()));
 	}
 
 	public BukkitRunnable shoot(Ghast ghast, LivingEntity target) {

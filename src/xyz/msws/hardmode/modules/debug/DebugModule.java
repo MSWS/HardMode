@@ -2,6 +2,8 @@ package xyz.msws.hardmode.modules.debug;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -10,6 +12,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -73,6 +76,25 @@ public class DebugModule extends AbstractModule implements Listener {
 		OfflinePlayer target = args.length == 1 ? Bukkit.getOfflinePlayer(args[0]) : player, ft;
 
 		switch (event.getMessage().split(" ")[0].toLowerCase()) {
+		case "parseconfig":
+			ConfigurationSection mobs = plugin.getConfig().getConfigurationSection("Mobs");
+			Map<String, Object> values = mobs.getValues(true);
+			StringBuilder message = new StringBuilder("\n");
+			for (Entry<String, Object> entry : values.entrySet()) {
+				if (mobs.isConfigurationSection(entry.getKey()))
+					continue;
+
+				if (entry.getValue() instanceof String) {
+					message.append(entry.getKey().replace(".", "_").toUpperCase() + "(\"Mobs." + entry.getKey()
+							+ "\", \"" + entry.getValue() + "\"),\n");
+				} else {
+					message.append(entry.getKey().replace(".", "_").toUpperCase() + "(\"Mobs." + entry.getKey() + "\", "
+							+ entry.getValue() + "),\n");
+				}
+
+			}
+			MSG.tell(player, message.toString());
+			break;
 		case "kit":
 			if (!target.isOnline()) {
 				MSG.tell(player, "Debug", MSG.PLAYER + target.getName() + MSG.DEFAULT + " is offline.");

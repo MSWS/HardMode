@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomWitch extends BehaviorListener {
 
@@ -41,17 +42,15 @@ public class CustomWitch extends BehaviorListener {
 		};
 
 		PotionMeta def = (PotionMeta) Bukkit.getItemFactory().getItemMeta(Material.POTION);
-		def.addCustomEffect(new PotionEffect(PotionEffectType.LEVITATION, 5 * 20, 2), true);
-		potions.put(def, 1.0 / 50);
-		def.clearCustomEffects();
-		def.addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 7 * 20, 0), true);
-		potions.put(def, 1.0 / 30);
-		def.clearCustomEffects();
-		def.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 20, 1), true);
-		potions.put(def, 1.0 / 40);
-		def.clearCustomEffects();
-		def.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 10 * 20, 2), true);
-		potions.put(def, 1.0 / 35);
+
+		for (String potionType : plugin.getConfig().getConfigurationSection("Mobs.Witch.Potions").getKeys(false)) {
+			String path = "Mobs.Witch.Potions." + potionType;
+			def.addCustomEffect(
+					new PotionEffect(PotionEffectType.getByName(potionType),
+							plugin.getConfig().getInt(path + ".Duration"), plugin.getConfig().getInt(path + ".Level")),
+					true);
+			potions.put(def, plugin.getConfig().getDouble(path + ".Probability"));
+		}
 	}
 
 	@EventHandler
@@ -86,7 +85,7 @@ public class CustomWitch extends BehaviorListener {
 		if (witch.isInsideVehicle())
 			return;
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		if (random.nextDouble() > .2)
+		if (random.nextDouble() > CE.WITCH_BATSPAWN_PROBABILITY.doubleValue())
 			return;
 		Bat bat = (Bat) witch.getWorld().spawnEntity(witch.getLocation(), EntityType.BAT);
 		bat.addPassenger(witch);

@@ -21,6 +21,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomSlime extends BehaviorListener {
 
@@ -55,7 +56,8 @@ public class CustomSlime extends BehaviorListener {
 			return;
 		if (plugin.getConfig().getBoolean("DebugMode.Enabled"))
 			plugin.log("Slime runnable started targetting " + event.getTarget() + ".");
-		tasks.put(slime, charge(slime, event.getTarget()).runTaskTimer((Plugin) plugin, 25, 80));
+		tasks.put(slime, charge(slime, event.getTarget()).runTaskTimer((Plugin) plugin,
+				CE.SLIME_CHARGE_STARTDELAY.intValue(), CE.SLIME_CHARGE_PERIODDELAY.intValue()));
 	}
 
 	@EventHandler
@@ -63,14 +65,16 @@ public class CustomSlime extends BehaviorListener {
 		if (!selector.matches(event.getEntity()))
 			return;
 		Slime slime = (Slime) event.getEntity();
-		if (random.nextDouble() > .2)
+		if (random.nextDouble() > CE.SLIME_SIZEINCREASE_PROBABILITY.doubleValue())
 			return;
 		if (slime.isDead())
 			return;
-		if (slime.getSize() > 5)
+		if (slime.getSize() > CE.SLIME_SIZEINCREASE_MAXSIZE.intValue())
 			return;
 		slime.setSize(slime.getSize() + 1);
-		slime.getWorld().playSound(slime.getLocation(), Sound.BLOCK_SLIME_BLOCK_FALL, 2, 1);
+		slime.getWorld().playSound(slime.getLocation(), CE.SLIME_SIZEINCREASE_SOUND_NAME.getValue(Sound.class),
+				CE.SLIME_SIZEINCREASE_SOUND_VOLUME.getValue(Number.class).floatValue(),
+				CE.SLIME_SIZEINCREASE_SOUND_PITCH.getValue(Number.class).floatValue());
 	}
 
 	@EventHandler
@@ -78,14 +82,16 @@ public class CustomSlime extends BehaviorListener {
 		if (!selector.matches(event.getDamager()))
 			return;
 		Slime slime = (Slime) event.getDamager();
-		if (slime.getSize() < 2)
+		if (slime.getSize() < CE.SLIME_SLOWATTACK_MINIMUMSIZE.intValue())
 			return;
-		if (random.nextDouble() > .3)
+		if (random.nextDouble() > CE.SLIME_SLOWATTACK_PROBABILITY.doubleValue())
 			return;
 		if (!(event.getEntity() instanceof LivingEntity))
 			return;
 		LivingEntity entity = (LivingEntity) event.getEntity();
-		entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 5, random.nextInt(1, 3)));
+		entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, CE.SLIME_SLOWATTACK_DURATION.intValue(),
+				random.nextInt(CE.SLIME_SLOWATTACK_POWER_MINIMUM.intValue(),
+						CE.SLIME_SLOWATTACK_POWER_MAXIMUM.intValue())));
 	}
 
 	public BukkitRunnable charge(Slime slime, Entity target) {

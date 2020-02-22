@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,6 +30,7 @@ import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.debug.DebugModule;
 import xyz.msws.hardmode.modules.mobs.MobManager;
 import xyz.msws.hardmode.modules.movement.PlayerMovementModule;
+import xyz.msws.hardmode.utils.CE;
 
 public class HardMode extends JavaPlugin {
 	private Set<AbstractModule> modules = new HashSet<>();
@@ -41,7 +43,21 @@ public class HardMode extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		saveResource("config.yml", false);
+		File con = new File(getDataFolder(), "config.yml");
+		if (!con.exists()) {
+			YamlConfiguration y = new YamlConfiguration();
+			for (CE ce : CE.values()) {
+				y.set(ce.getPath(), ce.getValue());
+			}
+			y.set("DebugMode.Enabled", false);
+			try {
+				y.save(con);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		CE.updateValues(getConfig());
 
 		new File(getDataFolder(), "logs").mkdirs();
 		logFile = new File(getDataFolder(), "logs/" + System.currentTimeMillis() + ".log");

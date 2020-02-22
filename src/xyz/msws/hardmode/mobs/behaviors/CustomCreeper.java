@@ -16,6 +16,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 
 public class CustomCreeper extends BehaviorListener {
 	public CustomCreeper(HardMode plugin) {
@@ -50,7 +51,8 @@ public class CustomCreeper extends BehaviorListener {
 		creeper.explode();
 
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		if (random.nextDouble() > .05 && !creeper.isPowered())
+		if (random.nextDouble() > CE.CREEPER_TNTRATE.getValue(Number.class).doubleValue()
+				&& (!creeper.isPowered() && CE.CREEPER_TNTPOWERED.getValue(Boolean.class)))
 			return;
 		plugin.getMobManager().getAttack(AID.TNT).attack(creeper, creeper);
 	}
@@ -61,7 +63,7 @@ public class CustomCreeper extends BehaviorListener {
 			return;
 
 		Creeper creeper = (Creeper) event.getEntity();
-		creeper.setMaxFuseTicks(15); // 30 -> 15
+		creeper.setMaxFuseTicks(CE.CREEPER_FUSETICKS.getValue(Number.class).intValue()); // 30 -> 15
 	}
 
 	public int getExplosionPower(LivingEntity creeper) {

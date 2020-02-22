@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -31,6 +30,7 @@ import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.modules.mobs.BehaviorListener;
 import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.utils.CE;
 import xyz.msws.hardmode.utils.Utils;
 
 public class CustomZombie extends BehaviorListener {
@@ -52,24 +52,38 @@ public class CustomZombie extends BehaviorListener {
 		chances = new HashMap<PotionEffect, Double>();
 		equipment = new HashMap<ItemStack, Double>();
 
-		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30 * 20, 0), 1.0 / 52);
-		chances.put(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 1), 1.0 / 28);
-		chances.put(new PotionEffect(PotionEffectType.POISON, 15 * 20, 0), 1.0 / 47);
-		chances.put(new PotionEffect(PotionEffectType.WITHER, 5 * 20, 1), 1.0 / 32);
-		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), 1.0 / 25);
+		for (String effect : plugin.getConfig().getConfigurationSection("Mobs.Zombie.InflictEffects").getKeys(false)) {
+			String path = "Mobs.Zombie.InflictEffects." + effect;
+			chances.put(
+					new PotionEffect(PotionEffectType.getByName(effect), plugin.getConfig().getInt(path + ".Duration"),
+							plugin.getConfig().getInt(path + ".Level")),
+					plugin.getConfig().getDouble(path + ".Probability"));
+		}
 
-		equipment.put(new CItem(Material.DIAMOND_SWORD).build(), 1.0 / 100);
-		equipment.put(new CItem(Material.WOODEN_SWORD).enchantment(Enchantment.DAMAGE_ALL, 1).build(), 1.0 / 42);
-		equipment.put(new CItem(Material.WOODEN_AXE).build(), 1.0 / 55);
-		equipment.put(new CItem(Material.FISHING_ROD).enchantment(Enchantment.VANISHING_CURSE, 1).build(), 1.0 / 50);
-		equipment.put(new CItem(Material.GOLD_NUGGET).build(), 1.0 / 35);
-		equipment.put(new CItem(Material.STONE).build(), 1.0 / 46);
-		equipment.put(new CItem(Material.IRON_SWORD).build(), 1.0 / 75);
-		equipment.put(new CItem(Material.STONE_SWORD).enchantment(Enchantment.DURABILITY, 2).build(), 1.0 / 52);
-		equipment.put(new CItem(Material.GOLDEN_SHOVEL).enchantment(Enchantment.DIG_SPEED, 1).build(), 1.0 / 72);
-		equipment.put(new CItem(Material.STICK).build(), 1.0 / 36);
-		equipment.put(new CItem(Material.REDSTONE).build(), 1.0 / 82);
-		equipment.put(new CItem(Material.DIAMOND_AXE).enchantment(Enchantment.DAMAGE_UNDEAD, 4).build(), 1.0 / 85);
+//		chances.put(new PotionEffect(PotionEffectType.WEAKNESS, 30 * 20, 0), 1.0 / 52);
+//		chances.put(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 1), 1.0 / 28);
+//		chances.put(new PotionEffect(PotionEffectType.POISON, 15 * 20, 0), 1.0 / 47);
+//		chances.put(new PotionEffect(PotionEffectType.WITHER, 5 * 20, 1), 1.0 / 32);
+//		chances.put(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 20, 0), 1.0 / 25);
+
+//		equipment.put(new CItem(Material.DIAMOND_SWORD).build(), 1.0 / 100);
+//		equipment.put(new CItem(Material.WOODEN_SWORD).enchantment(Enchantment.DAMAGE_ALL, 1).build(), 1.0 / 42);
+//		equipment.put(new CItem(Material.WOODEN_AXE).build(), 1.0 / 55);
+//		equipment.put(new CItem(Material.FISHING_ROD).enchantment(Enchantment.VANISHING_CURSE, 1).build(), 1.0 / 50);
+//		equipment.put(new CItem(Material.GOLD_NUGGET).build(), 1.0 / 35);
+//		equipment.put(new CItem(Material.STONE).build(), 1.0 / 46);
+//		equipment.put(new CItem(Material.IRON_SWORD).build(), 1.0 / 75);
+//		equipment.put(new CItem(Material.STONE_SWORD).enchantment(Enchantment.DURABILITY, 2).build(), 1.0 / 52);
+//		equipment.put(new CItem(Material.GOLDEN_SHOVEL).enchantment(Enchantment.DIG_SPEED, 1).build(), 1.0 / 72);
+//		equipment.put(new CItem(Material.STICK).build(), 1.0 / 36);
+//		equipment.put(new CItem(Material.REDSTONE).build(), 1.0 / 82);
+//		equipment.put(new CItem(Material.DIAMOND_AXE).enchantment(Enchantment.DAMAGE_UNDEAD, 4).build(), 1.0 / 85);
+		for (String item : plugin.getConfig().getConfigurationSection("Mobs.Zombie.SpawnItems").getKeys(false)) {
+			ItemStack i = new CItem(
+					plugin.getConfig().getConfigurationSection("Mobs.Zombie.SpawnItems." + item).getValues(false))
+							.build();
+			equipment.put(i, plugin.getConfig().getDouble("Mobs.Zombie.SpawnItems." + item + ".Probability"));
+		}
 	}
 
 	@EventHandler
@@ -88,13 +102,14 @@ public class CustomZombie extends BehaviorListener {
 			return;
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 
-		if (random.nextDouble() > .3)
+		if (random.nextDouble() > CE.ZOMBIE_SPAWNNEW_PROBABILITY.doubleValue())
 			return;
 
 		zombie.setMetadata("hasSummoned", new FixedMetadataValue(plugin, true));
 
 		Location spawnLocation = zombie.getLocation().clone();
-		spawnLocation.add(random.nextDouble(-5, 5), 0, random.nextDouble(-5, 5));
+		double range = CE.ZOMBIE_SPAWNNEW_RADIUS.doubleValue();
+		spawnLocation.add(random.nextDouble(-range, range), 0, random.nextDouble(-range, range));
 
 		spawnLocation.setY(spawnLocation.getWorld().getHighestBlockYAt(spawnLocation) + 1);
 
@@ -107,7 +122,7 @@ public class CustomZombie extends BehaviorListener {
 
 		newZombie.setMetadata("summonedZombie", new FixedMetadataValue(plugin, true));
 
-		if (random.nextDouble() > .8)
+		if (random.nextDouble() < CE.ZOMBIE_SPAWNNEW_BABYPROBABILITY.doubleValue())
 			newZombie.setBaby(true);
 
 		newZombie.setTarget(zombie.getTarget());
@@ -163,7 +178,7 @@ public class CustomZombie extends BehaviorListener {
 			return;
 		if (ThreadLocalRandom.current().nextDouble() > .2)
 			return;
-		respawn(zombie.getLocation(), zombie.getTarget(), 2000);
+		respawn(zombie.getLocation(), zombie.getTarget(), CE.ZOMBIE_RESPAWN_TIME.longValue());
 	}
 
 	@EventHandler
