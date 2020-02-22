@@ -6,13 +6,10 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -78,8 +75,6 @@ public class PlayerMovementModule extends AbstractModule {
 		speedFactor.put(Material.IRON_BLOCK, 1 + -.004);
 		speedFactor.put(Material.GOLD_BLOCK, 1 + -.003);
 
-		resetSpeeds();
-
 		task = new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -136,26 +131,9 @@ public class PlayerMovementModule extends AbstractModule {
 		}.runTaskTimer(plugin, 0, 3);
 	}
 
-	public void resetSpeeds() {
-		for (World w : Bukkit.getWorlds()) {
-			for (Entity ent : w.getEntities()) {
-				if (!(ent instanceof LivingEntity))
-					continue;
-				LivingEntity e = (LivingEntity) ent;
-				AttributeInstance inst = e.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-				Iterator<AttributeModifier> it = e.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getModifiers()
-						.iterator();
-				while (it.hasNext())
-					inst.removeModifier(it.next());
-				inst.setBaseValue(inst.getDefaultValue());
-			}
-		}
-	}
-
 	@Override
 	public void disable() {
 		task.cancel();
-		resetSpeeds();
 	}
 
 	@Override

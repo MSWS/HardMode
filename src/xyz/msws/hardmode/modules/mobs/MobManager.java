@@ -31,7 +31,7 @@ import xyz.msws.hardmode.modules.ModulePriority;
 public class MobManager extends AbstractModule {
 
 	public MobManager(HardMode plugin) {
-		super("mobmanager", plugin);
+		super("MobManager", plugin);
 	}
 
 	private List<BehaviorListener> behaviors;
@@ -65,6 +65,7 @@ public class MobManager extends AbstractModule {
 	@Override
 	public void disable() {
 		behaviors.forEach(b -> b.disable());
+		attacks.clear();
 	}
 
 	@Override

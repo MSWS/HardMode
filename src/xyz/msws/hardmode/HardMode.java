@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -39,25 +40,29 @@ public class HardMode extends JavaPlugin {
 
 	private MobManager mobManager;
 
-	private File logFile;
+	private File logFile, configFile;
+
+	private FileConfiguration config;
 
 	@Override
 	public void onEnable() {
-		File con = new File(getDataFolder(), "config.yml");
-		if (!con.exists()) {
+		configFile = new File(getDataFolder(), "config.yml");
+		if (!configFile.exists()) {
 			YamlConfiguration y = new YamlConfiguration();
 			for (CE ce : CE.values()) {
 				y.set(ce.getPath(), ce.getValue());
 			}
 			y.set("DebugMode.Enabled", false);
 			try {
-				y.save(con);
+				y.save(configFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		CE.updateValues(getConfig());
+		config = YamlConfiguration.loadConfiguration(configFile);
+
+		CE.updateValues(config);
 
 		new File(getDataFolder(), "logs").mkdirs();
 		logFile = new File(getDataFolder(), "logs/" + System.currentTimeMillis() + ".log");
@@ -101,11 +106,25 @@ public class HardMode extends JavaPlugin {
 		return logFile;
 	}
 
+	public FileConfiguration getConfig() {
+		return config;
+	}
+
 	@Override
 	public void onDisable() {
 		data.saveData();
 
 		disableModules();
+	}
+
+	public void reload() {
+		this.onDisable();
+		this.onEnable();
+	}
+
+	public void reloadConfig() {
+		config = YamlConfiguration.loadConfiguration(configFile);
+		CE.updateValues(config);
 	}
 
 	private void enableModules() {

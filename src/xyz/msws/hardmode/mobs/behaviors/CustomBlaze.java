@@ -41,7 +41,7 @@ public class CustomBlaze extends BehaviorListener {
 
 		long start = System.currentTimeMillis();
 
-		double speed = CE.BLAZE_PARTICLES_SPEED.getValue(Number.class).doubleValue();
+		double speed = CE.BLAZE_PARTICLES_SPEED.doubleValue();
 
 		particle = new BukkitRunnable() {
 			@Override
@@ -51,8 +51,8 @@ public class CustomBlaze extends BehaviorListener {
 					for (Blaze ent : w.getEntitiesByClass(Blaze.class)) {
 						for (double i = 0; i < CE.BLAZE_PARTICLES_LINES.getValue(Number.class).doubleValue(); i++) {
 							Location off = ent.getLocation().clone();
-							off.add(Math.sin(i + time), .5
-									+ Math.cos(time / CE.BLAZE_PARTICLES_YRATE.getValue(Number.class).doubleValue())
+							off.add(Math.sin(i + time),
+									.5 + Math.cos(time / CE.BLAZE_PARTICLES_YRATE.getValue(Number.class).doubleValue())
 											* 1,
 									Math.cos(i + time));
 							double vx = Math.sin(i + time) * speed;
