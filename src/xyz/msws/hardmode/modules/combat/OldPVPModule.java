@@ -91,7 +91,8 @@ public class OldPVPModule extends AbstractModule implements Listener {
 		PlayerJoinEvent.getHandlerList().unregister(this);
 		EntityDamageEvent.getHandlerList().unregister(this);
 
-		sap.disable();
+		if (sap != null)
+			sap.disable();
 
 		for (Player player : Bukkit.getOnlinePlayers())
 			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(defaultSpeed);

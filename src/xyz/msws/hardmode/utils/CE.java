@@ -1,5 +1,9 @@
 package xyz.msws.hardmode.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -38,10 +42,10 @@ public enum CE {
 	GLOBAL_LOOT_GNUG3_ICON("Mobs.Global.Loot.gnug3.Icon", "GOLD_NUGGET"),
 	GLOBAL_LOOT_GNUG3_AMOUNT("Mobs.Global.Loot.gnug3.Amount", 1),
 	GLOBAL_LOOT_GNUG3_PROBABILITY("Mobs.Global.Loot.gnug3.Probability", 0.05),
-	BLAZE_PARTICLES_SPEED("Mobs.Blaze.Particles.Speed", 0.2), BLAZE_PARTICLES_LINES("Mobs.Blaze.Particles.Lines", 10),
+	BLAZE_PARTICLES_SPEED("Mobs.Blaze.Particles.Speed", 0.1), BLAZE_PARTICLES_LINES("Mobs.Blaze.Particles.Lines", 20),
 	BLAZE_PARTICLES_YRATE("Mobs.Blaze.Particles.YRate", 400),
 	BLAZE_SPAWNING_VALIDBLOCKS("Mobs.Blaze.Spawning.ValidBlocks", "LAVA"),
-	BLAZE_SPAWNING_PROBABILITY("Mobs.Blaze.Spawning.Probability", 0.40),
+	BLAZE_SPAWNING_PROBABILITY("Mobs.Blaze.Spawning.Probability", 0.4),
 	BLAZE_FIREBALLS_POWER("Mobs.Blaze.Fireballs.Power", 1.5), CREEPER_FUSETICKS("Mobs.Creeper.FuseTicks", 15),
 	CREEPER_TNTRATE("Mobs.Creeper.TNTRate", 0.05), CREEPER_TNTPOWERED("Mobs.Creeper.TNTPowered", true),
 	ENDERMAN_UNTARGETDISTANCESQUARED("Mobs.Enderman.UntargetDistanceSquared", 2500),
@@ -65,7 +69,7 @@ public enum CE {
 	GHAST_SPAWNING_MESSAGEONSPAWN("Mobs.Ghast.Spawning.MessageOnSpawn", "You should have listened..."),
 	GHAST_SPAWNING_HORIZONTALRANGE("Mobs.Ghast.Spawning.HorizontalRange", 30),
 	GHAST_SPAWNING_VERTICALRANGE("Mobs.Ghast.Spawning.VerticalRange", 5),
-	GHAST_SHOOT_PROBABILITY("Mobs.Ghast.Shoot.Probability", .05),
+	GHAST_SHOOT_PROBABILITY("Mobs.Ghast.Shoot.Probability", 0.05),
 	GHAST_SHOOT_STARTDELAY("Mobs.Ghast.Shoot.StartDelay", 10),
 	GHAST_SHOOT_PERIODDELAY("Mobs.Ghast.Shoot.PeriodDelay", 120),
 	SKELETON_UNTARGETDISTANCESQUARED("Mobs.Skeleton.UntargetDistanceSquared", 2500),
@@ -142,11 +146,11 @@ public enum CE {
 	ZOMBIE_SPAWNITEMS_DSWORD_ICON("Mobs.Zombie.SpawnItems.dsword.Icon", "DIAMOND_SWORD"),
 	ZOMBIE_SPAWNITEMS_DSWORD_PROBABILITY("Mobs.Zombie.SpawnItems.dsword.Probability", 0.01),
 	ZOMBIE_SPAWNITEMS_WSWORD_ICON("Mobs.Zombie.SpawnItems.wsword.Icon", "WOODEN_SWORD"),
-	ZOMBIE_SPAWNITEMS_WSWORD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.wsword.Enchantments", "DAMAGE_ALL:1"),
+	ZOMBIE_SPAWNITEMS_WSWORD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.wsword.Enchantments", "DAMAGE_ALL:1", null),
 	ZOMBIE_SPAWNITEMS_WAXE_ICON("Mobs.Zombie.SpawnItems.waxe.Icon", "WOODEN_AXE"),
 	ZOMBIE_SPAWNITEMS_WAXE_PROBABILITY("Mobs.Zombie.SpawnItems.waxe.Probability", 0.018),
 	ZOMBIE_SPAWNITEMS_ROD_ICON("Mobs.Zombie.SpawnItems.rod.Icon", "FISHING_ROD"),
-	ZOMBIE_SPAWNITEMS_ROD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.rod.Enchantments", "VANISHING_CURSE:1"),
+	ZOMBIE_SPAWNITEMS_ROD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.rod.Enchantments", "VANISHING_CURSE:1", null),
 	ZOMBIE_SPAWNITEMS_ROD_PROBABILITY("Mobs.Zombie.SpawnItems.rod.Probability", 0.02),
 	ZOMBIE_SPAWNITEMS_GOLDNUGGET_ICON("Mobs.Zombie.SpawnItems.goldnugget.Icon", "GOLD_NUGGET"),
 	ZOMBIE_SPAWNITEMS_GOLDNUGGET_PROBABILITY("Mobs.Zombie.SpawnItems.goldnugget.Probability", 0.0285),
@@ -155,25 +159,36 @@ public enum CE {
 	ZOMBIE_SPAWNITEMS_IRONSWORD_ICON("Mobs.Zombie.SpawnItems.ironsword.Icon", "IRON_SWORD"),
 	ZOMBIE_SPAWNITEMS_IRONSWORD_PROBABILITY("Mobs.Zombie.SpawnItems.ironsword.Probability", 0.0133),
 	ZOMBIE_SPAWNITEMS_STONESWORD_ICON("Mobs.Zombie.SpawnItems.stonesword.Icon", "STONE_SWORD"),
-	ZOMBIE_SPAWNITEMS_STONESWORD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.stonesword.Enchantments", "DURABILITY:2"),
+	ZOMBIE_SPAWNITEMS_STONESWORD_ENCHANTMENTS("Mobs.Zombie.SpawnItems.stonesword.Enchantments", "DURABILITY:2", null),
 	ZOMBIE_SPAWNITEMS_STONESWORD_PROBABILITY("Mobs.Zombie.SpawnItems.stonesword.Probability", 0.01923),
 	ZOMBIE_SPAWNITEMS_GOLDSHOVEL_ICON("Mobs.Zombie.SpawnItems.goldshovel.Icon", "GOLDEN_SHOVEL"),
-	ZOMBIE_SPAWNITEMS_GOLDSHOVEL_ENCHANTMENTS("Mobs.Zombie.SpawnItems.goldshovel.Enchantments", "DIG_SPEED:1"),
+	ZOMBIE_SPAWNITEMS_GOLDSHOVEL_ENCHANTMENTS("Mobs.Zombie.SpawnItems.goldshovel.Enchantments", "DIG_SPEED:1", null),
 	ZOMBIE_SPAWNITEMS_GOLDSHOVEL_PROBABILITY("Mobs.Zombie.SpawnItems.goldshovel.Probability", 0.0138),
 	ZOMBIE_SPAWNITEMS_STICK_ICON("Mobs.Zombie.SpawnItems.stick.Icon", "STICK"),
 	ZOMBIE_SPAWNITEMS_STICK_PROBABILITY("Mobs.Zombie.SpawnItems.stick.Probability", 0.0277),
 	ZOMBIE_SPAWNITEMS_REDSTONE_ICON("Mobs.Zombie.SpawnItems.redstone.Icon", "REDSTONE"),
 	ZOMBIE_SPAWNITEMS_REDSTONE_PROBABILITY("Mobs.Zombie.SpawnItems.redstone.Probability", 0.0121),
 	ZOMBIE_SPAWNITEMS_DAXE_ICON("Mobs.Zombie.SpawnItems.daxe.Icon", "DIAMOND_AXE"),
-	ZOMBIE_SPAWNITEMS_DAXE_ENCHANTMENTS("Mobs.Zombie.SpawnItems.daxe.Enchantments", "DAMAGE_UNDEAD:4"),
-	ZOMBIE_SPAWNITEMS_DAXE_PROBABILITY("Mobs.Zombie.SpawnItems.daxe.Probability", 0.0117);
+	ZOMBIE_SPAWNITEMS_DAXE_ENCHANTMENTS("Mobs.Zombie.SpawnItems.daxe.Enchantments", "DAMAGE_UNDEAD:4", null),
+	ZOMBIE_SPAWNITEMS_DAXE_PROBABILITY("Mobs.Zombie.SpawnItems.daxe.Probability", 0.0117),
+	DEBUGMODE_ENABLED("DebugMode.Enabled", true), DEBUGMODE_ALLOW("DebugMode.Allow", "MSWS", null);
 
 	private String path;
 	private Object value;
 
 	CE(String path, Object... values) {
 		this.path = path;
-		this.value = values.length == 1 ? values[0] : values;
+
+		if (values.length == 1) {
+			this.value = values[0];
+		} else {
+			List<Object> objects = new ArrayList<Object>();
+			Collections.addAll(objects, values);
+			if (objects.get(objects.size() - 1) == null)
+				objects.remove(objects.size() - 1);
+
+			this.value = objects.toArray();
+		}
 	}
 
 	public String getPath() {

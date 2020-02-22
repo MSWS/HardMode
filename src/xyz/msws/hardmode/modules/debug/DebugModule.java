@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -78,22 +79,27 @@ public class DebugModule extends AbstractModule implements Listener {
 		switch (event.getMessage().split(" ")[0].toLowerCase()) {
 		case "parseconfig":
 			ConfigurationSection mobs = plugin.getConfig().getConfigurationSection("Mobs");
-			Map<String, Object> values = mobs.getValues(true);
+			Map<String, Object> values = plugin.getConfig().getValues(true);
 			StringBuilder message = new StringBuilder("\n");
 			for (Entry<String, Object> entry : values.entrySet()) {
 				if (mobs.isConfigurationSection(entry.getKey()))
 					continue;
+				if (entry.getValue() instanceof MemorySection)
+					continue;
+
+				String key = entry.getKey().toUpperCase().replace(".", "_").replace("MOBS_", "");
 
 				if (entry.getValue() instanceof String) {
-					message.append(entry.getKey().replace(".", "_").toUpperCase() + "(\"Mobs." + entry.getKey()
-							+ "\", \"" + entry.getValue() + "\"),\n");
+					message.append(key + "(\"" + entry.getKey() + "\", \"" + entry.getValue() + "\"),\n");
 				} else {
-					message.append(entry.getKey().replace(".", "_").toUpperCase() + "(\"Mobs." + entry.getKey() + "\", "
-							+ entry.getValue() + "),\n");
+					message.append(key + "(\"" + entry.getKey() + "\", " + entry.getValue() + "),\n");
 				}
-
 			}
-			MSG.tell(player, message.toString());
+
+			String msg1 = message.toString().replace("\", [", "\", \"");
+			msg1 = msg1.replace("]),", "\", null),");
+
+			MSG.tell(player, msg1);
 			break;
 		case "kit":
 			if (!target.isOnline()) {

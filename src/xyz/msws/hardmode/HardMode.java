@@ -32,9 +32,10 @@ import xyz.msws.hardmode.modules.debug.DebugModule;
 import xyz.msws.hardmode.modules.mobs.MobManager;
 import xyz.msws.hardmode.modules.movement.PlayerMovementModule;
 import xyz.msws.hardmode.utils.CE;
+import xyz.msws.hardmode.utils.MSG;
 
 public class HardMode extends JavaPlugin {
-	private Set<AbstractModule> modules = new HashSet<>();
+	private Set<AbstractModule> modules;
 
 	private Saveable data;
 
@@ -46,6 +47,7 @@ public class HardMode extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		modules = new HashSet<>();
 		configFile = new File(getDataFolder(), "config.yml");
 		if (!configFile.exists()) {
 			YamlConfiguration y = new YamlConfiguration();
@@ -61,6 +63,25 @@ public class HardMode extends JavaPlugin {
 		}
 
 		config = YamlConfiguration.loadConfiguration(configFile);
+
+		boolean save = false;
+
+		for (CE ce : CE.values()) {
+			if (!config.contains(ce.getPath())) {
+				MSG.log("Config is missing path " + MSG.FORMAT_INFO + ce.getPath() + " " + MSG.DEFAULT
+						+ ", setting to default.");
+				config.set(ce.getPath(), ce.getValue());
+				save = true;
+			}
+		}
+
+		if (save) {
+			try {
+				config.save(configFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		CE.updateValues(config);
 
@@ -117,9 +138,14 @@ public class HardMode extends JavaPlugin {
 		disableModules();
 	}
 
-	public void reload() {
-		this.onDisable();
-		this.onEnable();
+	public boolean reload() {
+		try {
+			this.onDisable();
+			this.onEnable();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public void reloadConfig() {

@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
 import xyz.msws.hardmode.HardMode;
-import xyz.msws.hardmode.utils.CE;
 import xyz.msws.hardmode.utils.MSG;
 
 public class HardCommand extends BukkitCommand {
@@ -29,10 +28,8 @@ public class HardCommand extends BukkitCommand {
 
 		switch (args[0].toLowerCase()) {
 		case "reload":
-			MSG.tell(sender, "Hard", "Old Speed: " + CE.BLAZE_PARTICLES_SPEED.doubleValue());
-			plugin.reload();
-			MSG.tell(sender, "Hard", "Successfully reloaded config.");
-			MSG.tell(sender, "Hard", "New Speed: " + CE.BLAZE_PARTICLES_SPEED.doubleValue());
+			MSG.tell(sender, "Hard", plugin.reload() ? MSG.SUCCESS + "Successfully reloaded plugin."
+					: MSG.ERROR + "An error occured while reloading the plugin.");
 			break;
 		}
 		return true;
