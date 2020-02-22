@@ -28,6 +28,7 @@ import xyz.msws.hardmode.modules.data.ConnectionManager;
 import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.debug.DebugModule;
 import xyz.msws.hardmode.modules.mobs.MobManager;
+import xyz.msws.hardmode.modules.movement.PlayerMovementModule;
 
 public class HardMode extends JavaPlugin {
 	private Set<AbstractModule> modules = new HashSet<>();
@@ -68,7 +69,7 @@ public class HardMode extends JavaPlugin {
 		modules.add(mobManager);
 
 		modules.add(new OldPVPModule(this));
-
+		modules.add(new PlayerMovementModule(this));
 		modules.add(new DebugModule(this));
 
 		ConfigurationSerialization.registerClass(CItem.class, "CItem");

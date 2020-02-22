@@ -22,7 +22,7 @@ import xyz.msws.hardmode.modules.ModulePriority;
 public class OldPVPModule extends AbstractModule implements Listener {
 
 	public OldPVPModule(HardMode plugin) {
-		super("oldpvp", plugin);
+		super("OldPVP", plugin);
 	}
 
 	private SweepAttackPreventor sap;

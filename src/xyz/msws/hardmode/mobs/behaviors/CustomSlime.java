@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
@@ -38,7 +37,7 @@ public class CustomSlime extends BehaviorListener {
 		selector = new MobSelector() {
 			@Override
 			public boolean matches(Entity ent) {
-				return (ent.getType() == EntityType.SLIME);
+				return (ent instanceof Slime);
 			}
 		};
 	}
