@@ -58,7 +58,7 @@ public class HardMode extends JavaPlugin {
 
 		for (CE ce : CE.values()) {
 			if (!config.contains(ce.getPath())) {
-				MSG.log("Config is missing path " + MSG.FORMAT_INFO + ce.getPath() + " " + MSG.DEFAULT
+				MSG.log("Config is missing path " + MSG.FORMAT_INFO + ce.getPath().trim() + " " + MSG.DEFAULT
 						+ ", setting to default.");
 				config.set(ce.getPath(), ce.getValue());
 				save = true;

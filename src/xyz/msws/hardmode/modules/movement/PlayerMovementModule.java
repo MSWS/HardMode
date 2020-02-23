@@ -3,6 +3,7 @@ package xyz.msws.hardmode.modules.movement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,17 +41,35 @@ public class PlayerMovementModule extends AbstractModule {
 		speedFactor = new HashMap<>();
 
 		Map<String, Double> mats = new HashMap<>();
-		mats.put("DIAMOND", 0.001);
-		mats.put("IRON", .002);
-		mats.put("CHAINMAIL", 0.003);
-		mats.put("LEATHER", 0.004);
-		mats.put("GOLDEN", 0.0045);
+//		mats.put("DIAMOND", 0.001);
+//		mats.put("IRON", .002);
+//		mats.put("CHAINMAIL", 0.003);
+//		mats.put("LEATHER", 0.004);
+//		mats.put("GOLDEN", 0.0045);
+
+		if (plugin.getConfig().isConfigurationSection("PlayerMovement.Armor.Materials")) {
+			for (Entry<String, Object> values : plugin.getConfig()
+					.getConfigurationSection("PlayerMovement.Armor.Materials").getValues(false).entrySet()) {
+				mats.put(values.getKey(), (double) values.getValue());
+			}
+		} else {
+			MSG.log(MSG.ERROR + "Unable to get Armor Materials from config.");
+		}
 
 		Map<String, Double> weights = new HashMap<>();
-		weights.put("HELMET", 1.0);
-		weights.put("CHESTPLATE", 2.0);
-		weights.put("LEGGINGS", 1.8);
-		weights.put("BOOTS", 1.5);
+//		weights.put("HELMET", 1.0);
+//		weights.put("CHESTPLATE", 2.0);
+//		weights.put("LEGGINGS", 1.8);
+//		weights.put("BOOTS", 1.5);
+		if (plugin.getConfig().isConfigurationSection("PlayerMovement.Armor.Slots")) {
+			for (Entry<String, Object> values : plugin.getConfig().getConfigurationSection("PlayerMovement.Armor.Slots")
+					.getValues(false).entrySet()) {
+				weights.put(values.getKey(), (double) values.getValue());
+			}
+
+		} else {
+			MSG.log(MSG.ERROR + "Unable to get Armor Slots from config.");
+		}
 
 		for (String matType : mats.keySet()) {
 			for (String weight : weights.keySet()) {
@@ -60,20 +79,27 @@ public class PlayerMovementModule extends AbstractModule {
 			}
 		}
 
-		speedFactor.put(Material.DIAMOND_SWORD, 1 + .0008);
-		speedFactor.put(Material.DIAMOND_AXE, 1 + .0004);
-		speedFactor.put(Material.IRON_SWORD, 1 + .001);
-		speedFactor.put(Material.IRON_AXE, 1 + .0005);
-		speedFactor.put(Material.GOLDEN_SWORD, 1 + .0045);
-		speedFactor.put(Material.GOLDEN_AXE, 1 + .00225);
-		speedFactor.put(Material.BLAZE_ROD, 1 + .009);
-		speedFactor.put(Material.BOW, 1 + .0047);
-		speedFactor.put(Material.AIR, 1 + .005);
-		speedFactor.put(Material.SHIELD, 1 + .0008);
-		speedFactor.put(Material.OBSIDIAN, 1 + -.0005);
-		speedFactor.put(Material.DIAMOND_BLOCK, 1 + -.005);
-		speedFactor.put(Material.IRON_BLOCK, 1 + -.004);
-		speedFactor.put(Material.GOLD_BLOCK, 1 + -.003);
+		for (Entry<String, Object> mat : plugin.getConfig().getConfigurationSection("PlayerMovement.Items")
+				.getValues(false).entrySet()) {
+
+			speedFactor.put(Material.valueOf(mat.getKey()), 1 + (double) mat.getValue());
+
+		}
+
+//		speedFactor.put(Material.DIAMOND_SWORD, 1 + .0008);
+//		speedFactor.put(Material.DIAMOND_AXE, 1 + .0004);
+//		speedFactor.put(Material.IRON_SWORD, 1 + .001);
+//		speedFactor.put(Material.IRON_AXE, 1 + .0005);
+//		speedFactor.put(Material.GOLDEN_SWORD, 1 + .0045);
+//		speedFactor.put(Material.GOLDEN_AXE, 1 + .00225);
+//		speedFactor.put(Material.BLAZE_ROD, 1 + .009);
+//		speedFactor.put(Material.BOW, 1 + .0047);
+//		speedFactor.put(Material.AIR, 1 + .005);
+//		speedFactor.put(Material.SHIELD, 1 + .0008);
+//		speedFactor.put(Material.OBSIDIAN, 1 + -.0005);
+//		speedFactor.put(Material.DIAMOND_BLOCK, 1 + -.005);
+//		speedFactor.put(Material.IRON_BLOCK, 1 + -.004);
+//		speedFactor.put(Material.GOLD_BLOCK, 1 + -.003);
 
 		task = new BukkitRunnable() {
 			@Override
