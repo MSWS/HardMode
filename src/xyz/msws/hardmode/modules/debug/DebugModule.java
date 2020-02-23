@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -23,10 +24,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.inventory.CItem;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
+import xyz.msws.hardmode.packets.WrapperPlayServerGameStateChange;
+import xyz.msws.hardmode.packets.WrapperPlayServerOpenWindow;
 import xyz.msws.hardmode.utils.MSG;
 import xyz.msws.hardmode.utils.Utils;
 
@@ -77,6 +82,19 @@ public class DebugModule extends AbstractModule implements Listener {
 		OfflinePlayer target = args.length == 1 ? Bukkit.getOfflinePlayer(args[0]) : player, ft;
 
 		switch (event.getMessage().split(" ")[0].toLowerCase()) {
+		case "end":
+			WrapperPlayServerGameStateChange packet = new WrapperPlayServerGameStateChange();
+			packet.setReason(4);
+			packet.setValue(1);
+			packet.sendPacket(player);
+			break;
+		case "rename":
+			WrapperPlayServerOpenWindow window = new WrapperPlayServerOpenWindow();
+			window.setInventoryType("minecraft:anvil");
+			window.setWindowID(ThreadLocalRandom.current().nextInt());
+			window.setWindowTitle(WrappedChatComponent.fromText("test"));
+			window.sendPacket(player);
+			break;
 		case "parseconfig":
 			ConfigurationSection mobs = plugin.getConfig().getConfigurationSection("Mobs");
 			Map<String, Object> values = plugin.getConfig().getValues(true);

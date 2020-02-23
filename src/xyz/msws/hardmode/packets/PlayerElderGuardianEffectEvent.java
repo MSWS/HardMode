@@ -21,8 +21,7 @@ public class PlayerElderGuardianEffectEvent extends Event implements Cancellable
 		return player;
 	}
 
-	@Override
-	public HandlerList getHandlers() {
+	public static HandlerList getHandlerList() {
 		return handlers;
 	}
 
@@ -34,6 +33,11 @@ public class PlayerElderGuardianEffectEvent extends Event implements Cancellable
 	@Override
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
+	}
+
+	@Override
+	public  HandlerList getHandlers() {
+		return handlers;
 	}
 
 }
