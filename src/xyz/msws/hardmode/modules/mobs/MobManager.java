@@ -19,6 +19,7 @@ import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
 import xyz.msws.hardmode.mobs.behaviors.CustomEnderman;
 import xyz.msws.hardmode.mobs.behaviors.CustomGhast;
+import xyz.msws.hardmode.mobs.behaviors.CustomGuardian;
 import xyz.msws.hardmode.mobs.behaviors.CustomSkeleton;
 import xyz.msws.hardmode.mobs.behaviors.CustomSlime;
 import xyz.msws.hardmode.mobs.behaviors.CustomSpider;
@@ -45,7 +46,7 @@ public class MobManager extends AbstractModule {
 
 		behaviors = Arrays.asList(new CustomCreeper(plugin), new CustomSkeleton(plugin), new CustomZombie(plugin),
 				new CustomSpider(plugin), new CustomBlaze(plugin), new CustomWitch(plugin), new CustomEnderman(plugin),
-				new CustomGhast(plugin), new CustomSlime(plugin), new GlobalMobs(plugin));
+				new CustomGhast(plugin), new CustomSlime(plugin), new CustomGuardian(plugin), new GlobalMobs(plugin));
 	}
 
 	public void loadAttacks() {

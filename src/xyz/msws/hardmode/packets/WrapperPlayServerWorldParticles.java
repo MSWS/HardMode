@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.msws.hardmode.modules.combat;
+package xyz.msws.hardmode.packets;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedParticle;
+
+import xyz.msws.hardmode.modules.combat.AbstractPacket;
 
 public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.WORLD_PARTICLES;

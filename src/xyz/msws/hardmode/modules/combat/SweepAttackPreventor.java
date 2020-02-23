@@ -9,6 +9,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.packets.WrapperPlayServerWorldParticles;
 
 public class SweepAttackPreventor {
 	private ProtocolManager manager;

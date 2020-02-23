@@ -165,6 +165,12 @@ public class HardMode extends JavaPlugin {
 		}
 	}
 
+	public void enableModule(AbstractModule module) {
+		module.initialize();
+		module.setEnabled(true);
+		modules.add(module);
+	}
+
 	private void disableModules(ModulePriority priority) {
 		for (AbstractModule mod : modules.stream().filter(mod -> mod.getPriority() == priority)
 				.collect(Collectors.toSet())) {
