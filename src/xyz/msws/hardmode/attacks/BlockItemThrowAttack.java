@@ -16,6 +16,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class BlockItemThrowAttack implements Attack {
 
@@ -39,15 +40,16 @@ public class BlockItemThrowAttack implements Attack {
 
 		Material material = (Material) data[0];
 
-		if (attacker.getLocation().distanceSquared(target.getLocation()) >= 100)
+		if (attacker.getLocation().distanceSquared(target.getLocation()) >= CE.BLOCKITEMTHROW_MINIMUMDISTANCE
+				.doubleValue())
 			return;
 
 		Item item = attacker.getWorld().dropItem(attacker.getLocation(), new ItemStack(material));
 		item.setPickupDelay(999999);
 		Vector aim = target.getLocation().toVector().subtract(attacker.getLocation().toVector());
 		aim.normalize();
-		aim.multiply(.8);
-		aim.setY(aim.getY() + .5);
+		aim.multiply(CE.BLOCKITEMTHROW_MULTIPLIER.doubleValue());
+		aim.setY(aim.getY() + CE.BLOCKITEMTHROW_YOFFSET.doubleValue());
 		item.setVelocity(aim);
 
 		long shootTime = System.currentTimeMillis();
@@ -67,7 +69,7 @@ public class BlockItemThrowAttack implements Attack {
 					item.teleport(target.getLocation().clone().subtract(0, 1, 0));
 					block = target.getLocation().getBlock();
 				}
-				if (System.currentTimeMillis() > shootTime + 10000) {
+				if (System.currentTimeMillis() > shootTime + CE.BLOCKITEMTHROW_LIVETIME.longValue()) {
 					item.remove();
 					this.cancel();
 					return;
@@ -75,15 +77,18 @@ public class BlockItemThrowAttack implements Attack {
 				item.remove();
 				BlockData oldBlock = block.getBlockData();
 				block.setType(material);
-				for (Entity ent : block.getLocation().getNearbyEntities(1, 1, 1)) {
+				double range = CE.BLOCKITEMTHROW_TELEPORTRANGE.doubleValue();
+				for (Entity ent : block.getLocation().getNearbyEntities(range, range, range)) {
 					if (ent.equals(attacker))
 						continue;
 					if (!(ent instanceof LivingEntity))
 						continue;
 					LivingEntity e = (LivingEntity) ent;
-					e.damage(3, e);
+					e.damage(CE.BLOCKITEMTHROW_DAMAGE.doubleValue(), e);
 					if (e instanceof Player)
-						((Player) e).playSound(e.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 2);
+						((Player) e).playSound(e.getLocation(), CE.BLOCKITEMTHROW_HITSOUND_NAME.getValue(Sound.class),
+								CE.BLOCKITEMTHROW_HITSOUND_VOLUME.floatValue(),
+								CE.BLOCKITEMTHROW_HITSOUND_PITCH.floatValue());
 				}
 
 				final Block toRemove = block;
@@ -93,7 +98,7 @@ public class BlockItemThrowAttack implements Attack {
 					public void run() {
 						toRemove.setBlockData(oldBlock);
 					}
-				}.runTaskLater(plugin, 20 * 20);
+				}.runTaskLater(plugin, CE.BLOCKITEMTHROW_REMOVEBLOCKAFTER.longValue());
 
 				this.cancel();
 			}

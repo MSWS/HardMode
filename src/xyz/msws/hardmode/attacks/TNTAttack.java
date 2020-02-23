@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class TNTAttack implements Attack {
 
@@ -21,9 +22,10 @@ public class TNTAttack implements Attack {
 	@Override
 	public void attack(Entity attacker, Entity target) {
 		TNTPrimed tnt = (TNTPrimed) attacker.getWorld().spawnEntity(attacker.getLocation(), EntityType.PRIMED_TNT);
-		tnt.setVelocity(new Vector(0, 2, 0));
-		tnt.setFuseTicks(72);
-		tnt.setYield(5);
+		tnt.setVelocity(new Vector(CE.TNTATTACK_VELOCITY_X.doubleValue(), CE.TNTATTACK_VELOCITY_Y.doubleValue(),
+				CE.TNTATTACK_VELOCITY_Z.doubleValue()));
+		tnt.setFuseTicks(CE.TNTATTACK_TICKS.intValue());
+		tnt.setYield(CE.TNTATTACK_POWER.floatValue());
 
 		new BukkitRunnable() {
 			long start = System.currentTimeMillis();

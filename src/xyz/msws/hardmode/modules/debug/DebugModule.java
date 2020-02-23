@@ -87,7 +87,8 @@ public class DebugModule extends AbstractModule implements Listener {
 				if (entry.getValue() instanceof MemorySection)
 					continue;
 
-				String key = entry.getKey().toUpperCase().replace(".", "_").replace("MOBS_", "");
+				String key = entry.getKey().toUpperCase().replace(".", "_").replace("MOBS_", "").replace("ATTACKS_",
+						"");
 
 				if (entry.getValue() instanceof String) {
 					message.append(key + "(\"" + entry.getKey() + "\", \"" + entry.getValue() + "\"),\n");

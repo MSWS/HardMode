@@ -49,18 +49,8 @@ public class HardMode extends JavaPlugin {
 	public void onEnable() {
 		modules = new HashSet<>();
 		configFile = new File(getDataFolder(), "config.yml");
-		if (!configFile.exists()) {
-			YamlConfiguration y = new YamlConfiguration();
-			for (CE ce : CE.values()) {
-				y.set(ce.getPath(), ce.getValue());
-			}
-			y.set("DebugMode.Enabled", false);
-			try {
-				y.save(configFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		if (!configFile.exists())
+			saveResource("config.yml", false);
 
 		config = YamlConfiguration.loadConfiguration(configFile);
 

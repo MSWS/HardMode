@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class GrabSlamAttack implements Attack {
 
@@ -42,18 +43,22 @@ public class GrabSlamAttack implements Attack {
 						return;
 					}
 					Vector up = attacker.getVelocity().clone();
-					up.setY(2.5);
+					up.setY(CE.GRABSLAMATTACK_UPVELOCITY.doubleValue());
 					attacker.setVelocity(up);
 				}
 
-				if (target.getLocation().getY() > lastY || System.currentTimeMillis() - grabTime < 500) {
+				if (target.getLocation().getY() > lastY
+						|| System.currentTimeMillis() - grabTime < CE.GRABSLAMATTACK_GRABTIME.longValue()) {
 					// We are still climbing up
 					lastY = target.getLocation().getY();
 					return;
 				}
 				attacker.removePassenger(target);
-				target.setVelocity(new Vector(0, -1.8, 0));
-				attacker.getWorld().playSound(attacker.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 2, 1);
+				target.setVelocity(new Vector(0, CE.GRABSLAMATTACK_THROWVELOCITY.doubleValue(), 0));
+				attacker.getWorld().playSound(attacker.getLocation(),
+						CE.GRABSLAMATTACK_THROWSOUND_NAME.getValue(Sound.class),
+						CE.GRABSLAMATTACK_THROWSOUND_VOLUME.floatValue(),
+						CE.GRABSLAMATTACK_THROWSOUND_PITCH.floatValue());
 
 				Location tp = attacker.getLocation().clone();
 				tp.setY(tp.getWorld().getHighestBlockYAt(tp));

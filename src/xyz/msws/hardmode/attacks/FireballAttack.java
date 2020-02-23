@@ -10,6 +10,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class FireballAttack implements Attack {
 
@@ -34,14 +35,15 @@ public class FireballAttack implements Attack {
 
 			@Override
 			public void run() {
-				if (balls >= 5) {
+				if (balls >= CE.FIREBALLATTACK_FIREBALLS.intValue()) {
 					this.cancel();
 					return;
 				}
 
 				Fireball ball = entity.launchProjectile(Fireball.class);
 
-				double speed = 7, accuracy = .15;
+				double speed = CE.FIREBALLATTACK_SPEED.doubleValue(),
+						accuracy = CE.FIREBALLATTACK_ACCURACY.doubleValue();
 
 				new BukkitRunnable() {
 					@Override
@@ -60,8 +62,11 @@ public class FireballAttack implements Attack {
 					}
 				}.runTaskTimer(plugin, 0, 1);
 
-				ball.setYield(2);
-				attacker.getWorld().playSound(attacker.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 2, 1);
+				ball.setYield(CE.FIREBALLATTACK_POWER.floatValue());
+				attacker.getWorld().playSound(attacker.getLocation(),
+						CE.FIREBALLATTACK_SHOOTSOUND_NAME.getValue(Sound.class),
+						CE.FIREBALLATTACK_SHOOTSOUND_VOLUME.floatValue(),
+						CE.FIREBALLATTACK_SHOOTSOUND_PITCH.floatValue());
 				balls++;
 			}
 		}.runTaskTimer(plugin, 0, 20);

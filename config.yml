@@ -1,150 +1,137 @@
-SQL:
-  Enabled: false
-  Database: db
-  Host: localhost
-  Port: 3306
-  User: root
-  Password: password
-#Debug Mode enables me (MSWS) to manage the plugin's internal settings in order to work on bug fixes.
-#You should leave this disabled unless otherwise requested by me to help assist in debugging your server/the plugin.
-#THIS WILL GIVE ME (OR WHOMEVER YOU LIST) ESSENTIALLY FULL ACCESS TO YOUR SERVER
-DebugMode:
-  Enabled: true
-  Allow: #Only list players you trust
-  - MSWS
 Mobs:
   Global:
-    MobSpawnerModifier: .5 # Mob drops from mob spawners will be halved
-    Hive:
+    MobSpawnerModifier: 0.5 # Mob drops from mobs that have spawned from spawners will be decreased by 1/2
+    Hive: # If a player attacks a mob, mobs within this range will automatically target towards the player
       HorizontalRange: 30
       VerticalRange: 10
       Sound:
-        Name: 'UI_BUTTON_CLICK'
-        Volume: .5
-        Pitch: .05
+        Name: UI_BUTTON_CLICK
+        Volume: 0.5
+        Pitch: 0.05
         Rate: 5
-    Loot:
+    Loot: # Global loot for all Monsters
       block:
-        Icon: 'GOLD_BLOCK'
+        Icon: GOLD_BLOCK
         Amount: 2
-        Probability: .0025
+        Probability: 0.0025
       block2:
-        Icon: 'GOLD_BLOCK'
-        Probability: .00333
+        Icon: GOLD_BLOCK
+        Probability: 0.00333
       gapple:
-        Icon: 'GOLDEN_APPLE'
-        Probability: .004
+        Icon: GOLDEN_APPLE
+        Probability: 0.004
       gingot:
-        Icon: 'GOLD_INGOT'
+        Icon: GOLD_INGOT
         Amount: 2
-        Probability: .005
+        Probability: 0.005
       gingot2:
-        Icon: 'GOLD_INGOT'
-        Probability: .01
+        Icon: GOLD_INGOT
+        Probability: 0.01
       gore:
-        Icon: 'GOLD_ORE'
-        Probability: .0113
+        Icon: GOLD_ORE
+        Probability: 0.0113
       gnug:
-        Icon: 'GOLD_NUGGET'
+        Icon: GOLD_NUGGET
         Amount: 3
-        Probability: .0125
+        Probability: 0.0125
       gnug1:
-        Icon: 'GOLD_NUGGET'
+        Icon: GOLD_NUGGET
         Amount: 2
-        Probability: .0285
+        Probability: 0.0285
       gnug3:
-        Icon: 'GOLD_NUGGET'
+        Icon: GOLD_NUGGET
         Amount: 1
-        Probability: .05
+        Probability: 0.05
   Blaze:
     Particles:
-      Speed: .2 # Speed of the particles that are pushed outwards
-      Lines: 10 # Number of lines to generate
-      YRate: 400 # Lower = Faster
-    Spawning:
+      Speed: 0.1
+      Lines: 20
+      YRate: 400
+    Spawning: # Blazes can spawn in these blocks
       ValidBlocks:
-      - 'LAVA'
-      Probability: 0.02 # 2%
-    Fireballs:
+      - LAVA
+      Probability: 0.4
+    Fireballs: # How powerful the blaze fireballs are
       Power: 1.5
   Creeper:
     FuseTicks: 15 # Default is 30
-    TNTRate: .05 # 5%
-    TNTPowered: true # If true, creeper will always spawn a TNT if it is powered
+    TNTRate: 0.05 # How likely a creeper is to spawn TNT when it dies
+    TNTPowered: true # If true, creepers will always spawn TNT if it is powered
   Enderman:
-    UntargetDistanceSquared: 2500 # Enderman may forget about their target if it is 50 blocks away
-    Damage: 5.5 # Default is 7
-    Chuck:
-      Probability: .70 # How likely an enderman is to pickup a block to throw it
-      StartDelay: 60 # Ticks for an enderman to start chucking blocks
-      PeriodDelay: 40 # Ticks for an enderman to throw/pickup blocks
+    UntargetDistanceSquared: 2500 # Distance (squared) for endermen to forget about its target (2500 = 50 blocks)
+    Damage: 5.5 # Damage the enderman will deal
+    Chuck: # Enderman will throw a block at the player
+      Probability: 0.7 # Probability that the enderman will pickup a block
+      StartDelay: 60 # Time in ticks for this attack to start
+      PeriodDelay: 40 # Repeat in ticks for the enderman to attempt to throw/pickup a block
       Sound:
-        Name: 'ENTITY_ENDERMAN_SCREAM'
+        Name: ENTITY_ENDERMAN_SCREAM
         Volume: 2
         Pitch: 1
-    GrabTeleport:
+    GrabTeleport: # Enderman will pickup the player and chuck them to the ground
       Probability:
-        Regular: .60 # How likely an enderman is when they hit an entity to do the attack
-        Blocking: .15 # Same as above but if the player is blocking it should be...
-    TeleportBehind:
-      Probability: .40 # How likely an enderman is to teleport behind their damager
-      MinimumDistance: 25 # Damager must be within 5 blocks
-      Distance: # These are negative due to how the code works, however -3 is 3 times further and behind, -1 is same distance and behind
+        Regular: 0.6 # Probability that this will happen if the player isn't blocking with a shield
+        Blocking: 0.15
+    TeleportBehind: # Enderman will teleport behind an attacker
+      Probability: 0.4
+      MinimumDistance: 25 # 5 Blocks
+      Distance: # Positive to teleport infront of attacker
         Minimum: -3
         Maximum: -1
   Ghast:
     UntargetDistanceSquared: 2500
     Spawning:
-      BlockHeight: 235 # When a player places a block at or above this height ghasts can spawn
-      MessageCooldown: 600 # Every 600 seconds (10 minutes) the player will be reminded not to build high
-      MessageOnPlace: '&eAn odd presence says you shouldn''t place blocks this high...'
-      MessageOnSpawn: '&6You should have listened...'
+      BlockHeight: 235 # Ghasts can spawn if a player places a block above this Y level
+      MessageCooldown: 600 # 600 seconds
+      MessageOnPlace: An odd presence says you shouldn't place blocks this high...
+      MessageOnSpawn: You should have listened...
       HorizontalRange: 30
       VerticalRange: 5
+      Probability: 0.05
     Shoot:
       StartDelay: 10
-      PeriodDelay: 120 # You should modify Attacks.Fireball to correspond with this
+      PeriodDelay: 120
   Skeleton:
-    UntargetDistanceSquared: 2500 # Enderman may forget about their target if it is 50 blocks away
-    Speed: .52 # Default is .50
+    UntargetDistanceSquared: 2500
+    Speed: 0.52 # Speed for the skeleton, default is .50
     FastArrow:
       StartDelay: 10
       PeriodDelay: 40
     Respawn:
-      Probability: .25
-      Time: 3000 # Respawning will take 3000 ms (3 seconds)
-      RespawningParticles: 'FLAME'
+      Probability: 0.25
+      Time: 3000 # 3 seconds
+      RespawningParticles: FLAME
       Sounds:
         Respawning:
-          Name: 'ENTITY_SKELETON_AMBIENT'
+          Name: ENTITY_SKELETON_AMBIENT
           Volume: 2
-          Pitch: .1
+          Pitch: 0.1
           Rate: 200
         Respawned:
-          Name: 'ENTITY_BLAZE_AMBIENT'
+          Name: ENTITY_BLAZE_AMBIENT
           Volume: 2
-          Pitch: .25
+          Pitch: 0.25
   Slime:
-    Charge: # The slime will charge at the player
+    Charge:
       StartDelay: 25
       PeriodDelay: 80
-    SizeIncrease: # When damaged the slime may increase in size
-      Probability: .20
+    SizeIncrease:
+      Probability: 0.2
       MaxSize: 5
       Sound:
-        Name: 'BLOCK_SLIME_BLOCK_FALL'
+        Name: BLOCK_SLIME_BLOCK_FALL
         Volume: 2
         Pitch: 1
-    SlowAttack: # When the slime damages an entity it has a chance to inflict slowness
+    SlowAttack:
       MinimumSize: 2
-      Probability: .30
-      Duration: 100 # In ticks
+      Probability: 0.30
+      Duration: 100
       Power:
         Minimum: 1
         Maximum: 3
   Spider:
-    Health: 11 # Default is 16
-    Speed: .62 # Default is .5
+    Health: 11
+    Speed: 0.62
     CobThrow:
       StartDelay: 20
       NextShot:
@@ -152,53 +139,53 @@ Mobs:
         Maximum: 6000
       Material: COBWEB
   Witch:
-    BatSpawn: # A witch when damaged may spawn a bat to ride on
-      Probability: .20 
-    Potions: # List of potions a witch may drink
+    BatSpawn:
+      Probability: 0.2
+    Potions:
       LEVITATION:
-        Probability: .02
+        Probability: 0.02
         Duration: 100
         Level: 2
       REGENERATION:
-        Probability: .03
+        Probability: 0.03
         Duration: 140
         Level: 0
       DAMAGE_RESISTANCE:
-        Probability: .025
+        Probability: 0.025
         Duration: 400
         Level: 1
       SPEED:
-        Probability: .028
+        Probability: 0.028
         Duration: 200
         Level: 2
   Zombie:
-    SpawnNew: # Zombies on targetting an entity can spawn in another zombie
-      Probability: .30
+    SpawnNew:
+      Probability: 0.3
       Radius: 5
-      BabyProbability: .80
+      BabyProbability: 0.8
     Respawn:
-      Probability: .20
-      Time: 2000 # Respawning will take 3000 ms (3 seconds)
-      RespawningParticles: 'SMOKE_NORMAL'
+      Probability: 0.2
+      Time: 2000
+      RespawningParticles: SMOKE_NORMAL
       Sounds:
         Respawning:
-          Name: 'ENTITY_ZOMBIE_HURT'
+          Name: ENTITY_ZOMBIE_HURT
           Volume: 2
-          Pitch: .1
+          Pitch: 0.1
           Rate: 800
         Respawned:
-          Name: 'ENTITY_SKELETON_HURT'
+          Name: ENTITY_SKELETON_HURT
           Volume: 2
-          Pitch: .1
-    InflictEffects: # Zombies when they hit an entity can inflict these effects
+          Pitch: 0.1
+    InflictEffects:
       WEAKNESS:
         Duration: 600
-        Level: 0 # Note that potion effects start at 0 and enchantments 1
-        Probability: .0192307692307692
+        Level: 0
+        Probability: 0.0192307692307692
       SLOW:
         Duration: 200
         Level: 1
-        Probability: 0.0357142857142857‬
+        Probability: 0.0357142857142857?
       POISON:
         Duration: 300
         Level: 0
@@ -211,50 +198,132 @@ Mobs:
         Duration: 400
         Level: 0
         Probability: 0.04
-    SpawnItems: # A zombie may spawn with the following items
+    SpawnItems:
       dsword:
-        Icon: 'DIAMOND_SWORD'
-        Probability: .01
+        Icon: DIAMOND_SWORD
+        Probability: 0.01
       wsword:
-        Icon: 'WOODEN_SWORD'
+        Icon: WOODEN_SWORD
         Enchantments:
-        - 'DAMAGE_ALL:1'
-        Probability: 
+        - DAMAGE_ALL:1
       waxe:
-        Icon: 'WOODEN_AXE'
-        Probability: .018
+        Icon: WOODEN_AXE
+        Probability: 0.018
       rod:
-        Icon: 'FISHING_ROD'
+        Icon: FISHING_ROD
         Enchantments:
-        - 'VANISHING_CURSE:1'
-        Probability: .02
+        - VANISHING_CURSE:1
+        Probability: 0.02
       goldnugget:
-        Icon: 'GOLD_NUGGET'
-        Probability: .0285
+        Icon: GOLD_NUGGET
+        Probability: 0.0285
       stone:
-        Icon: 'STONE'
-        Probability: .0217
+        Icon: STONE
+        Probability: 0.0217
       ironsword:
-        Icon: 'IRON_SWORD'
-        Probability: .0133
+        Icon: IRON_SWORD
+        Probability: 0.0133
       stonesword:
-        Icon: 'STONE_SWORD'
+        Icon: STONE_SWORD
         Enchantments:
-        - 'DURABILITY:2'
-        Probability: .01923
+        - DURABILITY:2
+        Probability: 0.01923
       goldshovel:
-        Icon: 'GOLDEN_SHOVEL'
+        Icon: GOLDEN_SHOVEL
         Enchantments:
-        - 'DIG_SPEED:1'
-        Probability: .0138
+        - DIG_SPEED:1
+        Probability: 0.0138
       stick:
-        Icon: 'STICK'
-        Probability: .0277
+        Icon: STICK
+        Probability: 0.0277
       redstone:
-        Icon: 'REDSTONE'
-        Probability: .0121
+        Icon: REDSTONE
+        Probability: 0.0121
       daxe:
         Icon: DIAMOND_AXE
         Enchantments:
-        - 'DAMAGE_UNDEAD:4'
-        Probability: .0117
+        - DAMAGE_UNDEAD:4
+        Probability: 0.0117
+Attacks:
+# Spiders use this attack
+  BlockItemThrow: # The attacker throws a block at the target in the form of an item
+    MinimumDistance: 100 # Target must be within 10 blocks
+    Multiplier: 0.8
+    YOffset: 0.5 # Speed of item
+    TeleportRange: 1 # Add .5 to the current velocity
+    LiveTime: 10000 # ms
+    Damage: 3
+    HitSound:
+      Name: ENTITY_EXPERIENCE_ORB_PICKUP
+      Volume: 1
+      Pitch: 2
+    RemoveBlockAfter: 400
+# Endermen user this attack
+  BlockPhysicThrow: # The attacker throws a physical block at the target
+    MinimumDistance: 100
+    Multiplier: 0.8
+    YMultiplier: 1.2
+    Damage:
+      HorizontalRange: 2
+      VerticalRange: 2
+      Damage: 8
+    HitSound:
+      Name: BLOCK_ANVIL_LAND
+      Volume: 1
+      Pitch: 0.11
+# Slimes use this attack
+  ChargeAtAttack: # The attacker "charges" itself at the target
+    RelativeMultiplier: 0.5
+    LaunchSound:
+      Name: ENTITY_PLAYER_ATTACK_SWEEP
+      Volume: 2
+      Pitch: 0.1
+    HitboxLifetime: 3000 # The attack will end after this many ms
+    Damage: 3 # Damage will scale automatically with slimes, additionally, damage is automatically scaled by 2 for mobs that aren't slimes
+    HitSound:
+      Name: ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR
+      Volume: 1
+      Pitch: 0.3
+# Skeletons use this attack
+  FastArrowAttack: # The attacker launches an arrow directed at the player
+    ShootSound:
+      Name: ENTITY_ARROW_SHOOT
+      Volume: 1
+      Pitch: 2
+    Multiplier: 0.3
+    Particles:
+      MaxParticles: 200
+      PaticlesPerBlock: 2
+      ParticleType: FLAME
+# Ghasts use this attack
+  FireballAttack: # The attacker shoots fireball(s) that can seek towards the target
+    Speed: 7
+    Accuracy: 0.15
+    Power: 2
+    Fireballs: 5
+    ShootSound:
+      Name: ENTITY_BLAZE_SHOOT
+      Volume: 2
+      Pitch: 1
+# Endermen use this attack
+  GrabSlamAttack: # The attacker will grab the player, go up into the air, and slam the player into the ground
+    GrabTime: 500 # How long until the attacker goes up into the air
+    UpVelocity: 2.5
+    ThrowVelocity: -1.8
+    ThrowSound:
+      Name: ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR
+      Volume: 2
+      Pitch: 1
+      Velocity: 2.5
+# Creepers use this attack
+  TNTAttack: # The attacker will spawn a TNT
+    Velocity:
+      X: 0
+      Y: 2
+      Z: 0
+    Ticks: 72
+    Power: 5
+DebugMode:
+  Enabled: true
+  Allow:
+  - MSWS

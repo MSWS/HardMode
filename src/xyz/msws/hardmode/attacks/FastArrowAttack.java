@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
-import xyz.msws.hardmode.utils.MSG;
+import xyz.msws.hardmode.utils.CE;
 
 public class FastArrowAttack implements Attack {
 
@@ -26,12 +26,13 @@ public class FastArrowAttack implements Attack {
 	@Override
 	public void attack(Entity attacker, Entity target) {
 		Vector aim = target.getLocation().toVector().subtract(attacker.getLocation().toVector());
-		aim.multiply(.3);
+		aim.multiply(CE.FASTARROWATTACK_MULTIPLIER.doubleValue());
 		Preconditions.checkArgument(ProjectileSource.class.isAssignableFrom(attacker.getClass()),
 				attacker.getType() + " is not a projectile source");
 		ProjectileSource entity = (ProjectileSource) attacker;
 		entity.launchProjectile(Arrow.class, aim);
-		attacker.getWorld().playSound(attacker.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1, 2);
+		attacker.getWorld().playSound(attacker.getLocation(), CE.FASTARROWATTACK_SHOOTSOUND_NAME.getValue(Sound.class),
+				CE.FASTARROWATTACK_SHOOTSOUND_VOLUME.floatValue(), CE.FASTARROWATTACK_SHOOTSOUND_PITCH.floatValue());
 
 		Location current = attacker instanceof LivingEntity ? ((LivingEntity) entity).getEyeLocation()
 				: attacker.getLocation();
@@ -42,20 +43,18 @@ public class FastArrowAttack implements Attack {
 		double lastDist = 0, currentDist = 0;
 
 		// If current dist > lastDist then we have gone PAST the target
-		while (currentDist <= lastDist && particles < 200) {
+		while (currentDist <= lastDist && particles < CE.FASTARROWATTACK_PARTICLES_MAXPARTICLES.intValue()) {
 			lastDist = current.distanceSquared(target.getLocation());
-			current.add(aim.clone().multiply(1.0 / 2.0));
+			current.add(aim.clone().multiply(1.0 / CE.FASTARROWATTACK_PARTICLES_PATICLESPERBLOCK.doubleValue()));
 			currentDist = current.distanceSquared(target.getLocation());
 
-			current.getWorld().spawnParticle(Particle.FLAME, current, 0);
+			current.getWorld().spawnParticle(CE.FASTARROWATTACK_PARTICLES_PARTICLETYPE.getValue(Particle.class),
+					current, 0);
 			if (current.getBlock().getType().isSolid()) {
 				return;
 			}
 			particles++;
 		}
-
-		if (particles >= 200)
-			MSG.announce("FastArrowAttack reached max particle amount (" + particles + ")");
 	}
 
 	@Override

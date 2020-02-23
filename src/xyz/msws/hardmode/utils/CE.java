@@ -44,7 +44,7 @@ public enum CE {
 	GLOBAL_LOOT_GNUG3_PROBABILITY("Mobs.Global.Loot.gnug3.Probability", 0.05),
 	BLAZE_PARTICLES_SPEED("Mobs.Blaze.Particles.Speed", 0.1), BLAZE_PARTICLES_LINES("Mobs.Blaze.Particles.Lines", 20),
 	BLAZE_PARTICLES_YRATE("Mobs.Blaze.Particles.YRate", 400),
-	BLAZE_SPAWNING_VALIDBLOCKS("Mobs.Blaze.Spawning.ValidBlocks", "LAVA"),
+	BLAZE_SPAWNING_VALIDBLOCKS("Mobs.Blaze.Spawning.ValidBlocks", "LAVA", null),
 	BLAZE_SPAWNING_PROBABILITY("Mobs.Blaze.Spawning.Probability", 0.4),
 	BLAZE_FIREBALLS_POWER("Mobs.Blaze.Fireballs.Power", 1.5), CREEPER_FUSETICKS("Mobs.Creeper.FuseTicks", 15),
 	CREEPER_TNTRATE("Mobs.Creeper.TNTRate", 0.05), CREEPER_TNTPOWERED("Mobs.Creeper.TNTPowered", true),
@@ -69,7 +69,7 @@ public enum CE {
 	GHAST_SPAWNING_MESSAGEONSPAWN("Mobs.Ghast.Spawning.MessageOnSpawn", "You should have listened..."),
 	GHAST_SPAWNING_HORIZONTALRANGE("Mobs.Ghast.Spawning.HorizontalRange", 30),
 	GHAST_SPAWNING_VERTICALRANGE("Mobs.Ghast.Spawning.VerticalRange", 5),
-	GHAST_SHOOT_PROBABILITY("Mobs.Ghast.Shoot.Probability", 0.05),
+	GHAST_SPAWNING_PROBABILITY("Mobs.Ghast.Spawning.Probability", 0.05),
 	GHAST_SHOOT_STARTDELAY("Mobs.Ghast.Shoot.StartDelay", 10),
 	GHAST_SHOOT_PERIODDELAY("Mobs.Ghast.Shoot.PeriodDelay", 120),
 	SKELETON_UNTARGETDISTANCESQUARED("Mobs.Skeleton.UntargetDistanceSquared", 2500),
@@ -171,7 +171,59 @@ public enum CE {
 	ZOMBIE_SPAWNITEMS_DAXE_ICON("Mobs.Zombie.SpawnItems.daxe.Icon", "DIAMOND_AXE"),
 	ZOMBIE_SPAWNITEMS_DAXE_ENCHANTMENTS("Mobs.Zombie.SpawnItems.daxe.Enchantments", "DAMAGE_UNDEAD:4", null),
 	ZOMBIE_SPAWNITEMS_DAXE_PROBABILITY("Mobs.Zombie.SpawnItems.daxe.Probability", 0.0117),
-	DEBUGMODE_ENABLED("DebugMode.Enabled", true), DEBUGMODE_ALLOW("DebugMode.Allow", "MSWS", null);
+	BLOCKITEMTHROW_MINIMUMDISTANCE("Attacks.BlockItemThrow.MinimumDistance", 100),
+	BLOCKITEMTHROW_MULTIPLIER("Attacks.BlockItemThrow.Multiplier", 0.8),
+	BLOCKITEMTHROW_YOFFSET("Attacks.BlockItemThrow.YOffset", 0.5),
+	BLOCKITEMTHROW_TELEPORTRANGE("Attacks.BlockItemThrow.TeleportRange", 1),
+	BLOCKITEMTHROW_LIVETIME("Attacks.BlockItemThrow.LiveTime", 10000),
+	BLOCKITEMTHROW_DAMAGE("Attacks.BlockItemThrow.Damage", 3),
+	BLOCKITEMTHROW_HITSOUND_NAME("Attacks.BlockItemThrow.HitSound.Name", "ENTITY_EXPERIENCE_ORB_PICKUP"),
+	BLOCKITEMTHROW_HITSOUND_VOLUME("Attacks.BlockItemThrow.HitSound.Volume", 1),
+	BLOCKITEMTHROW_HITSOUND_PITCH("Attacks.BlockItemThrow.HitSound.Pitch", 2),
+	BLOCKITEMTHROW_REMOVEBLOCKAFTER("Attacks.BlockItemThrow.RemoveBlockAfter", 400),
+	BLOCKPHYSICTHROW_MINIMUMDISTANCE("Attacks.BlockPhysicThrow.MinimumDistance", 100),
+	BLOCKPHYSICTHROW_MULTIPLIER("Attacks.BlockPhysicThrow.Multiplier", 0.8),
+	BLOCKPHYSICTHROW_YMULTIPLIER("Attacks.BlockPhysicThrow.YMultiplier", 1.2),
+	BLOCKPHYSICTHROW_DAMAGE_HORIZONTALRANGE("Attacks.BlockPhysicThrow.Damage.HorizontalRange", 2),
+	BLOCKPHYSICTHROW_DAMAGE_VERTICALRANGE("Attacks.BlockPhysicThrow.Damage.VerticalRange", 2),
+	BLOCKPHYSICTHROW_DAMAGE_DAMAGE("Attacks.BlockPhysicThrow.Damage.Damage", 8),
+	BLOCKPHYSICTHROW_HITSOUND_NAME("Attacks.BlockPhysicThrow.HitSound.Name", "BLOCK_ANVIL_LAND"),
+	BLOCKPHYSICTHROW_HITSOUND_VOLUME("Attacks.BlockPhysicThrow.HitSound.Volume", 1),
+	BLOCKPHYSICTHROW_HITSOUND_PITCH("Attacks.BlockPhysicThrow.HitSound.Pitch", 0.11),
+	CHARGEATATTACK_RELATIVEMULTIPLIER("Attacks.ChargeAtAttack.RelativeMultiplier", 0.5),
+	CHARGEATATTACK_LAUNCHSOUND_NAME("Attacks.ChargeAtAttack.LaunchSound.Name", "ENTITY_PLAYER_ATTACK_SWEEP"),
+	CHARGEATATTACK_LAUNCHSOUND_VOLUME("Attacks.ChargeAtAttack.LaunchSound.Volume", 2),
+	CHARGEATATTACK_LAUNCHSOUND_PITCH("Attacks.ChargeAtAttack.LaunchSound.Pitch", 0.1),
+	CHARGEATATTACK_HITBOXLIFETIME("Attacks.ChargeAtAttack.HitboxLifetime", 3000),
+	CHARGEATATTACK_DAMAGE("Attacks.ChargeAtAttack.Damage", 3),
+	CHARGEATATTACK_HITSOUND_NAME("Attacks.ChargeAtAttack.HitSound.Name", "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR"),
+	CHARGEATATTACK_HITSOUND_VOLUME("Attacks.ChargeAtAttack.HitSound.Volume", 1),
+	CHARGEATATTACK_HITSOUND_PITCH("Attacks.ChargeAtAttack.HitSound.Pitch", 0.3),
+	FASTARROWATTACK_SHOOTSOUND_NAME("Attacks.FastArrowAttack.ShootSound.Name", "ENTITY_ARROW_SHOOT"),
+	FASTARROWATTACK_SHOOTSOUND_VOLUME("Attacks.FastArrowAttack.ShootSound.Volume", 1),
+	FASTARROWATTACK_SHOOTSOUND_PITCH("Attacks.FastArrowAttack.ShootSound.Pitch", 2),
+	FASTARROWATTACK_MULTIPLIER("Attacks.FastArrowAttack.Multiplier", 0.3),
+	FASTARROWATTACK_PARTICLES_MAXPARTICLES("Attacks.FastArrowAttack.Particles.MaxParticles", 200),
+	FASTARROWATTACK_PARTICLES_PATICLESPERBLOCK("Attacks.FastArrowAttack.Particles.PaticlesPerBlock", 2),
+	FASTARROWATTACK_PARTICLES_PARTICLETYPE("Attacks.FastArrowAttack.Particles.ParticleType", "FLAME"),
+	FIREBALLATTACK_SPEED("Attacks.FireballAttack.Speed", 7),
+	FIREBALLATTACK_ACCURACY("Attacks.FireballAttack.Accuracy", 0.15),
+	FIREBALLATTACK_POWER("Attacks.FireballAttack.Power", 2),
+	FIREBALLATTACK_FIREBALLS("Attacks.FireballAttack.Fireballs", 5),
+	FIREBALLATTACK_SHOOTSOUND_NAME("Attacks.FireballAttack.ShootSound.Name", "ENTITY_BLAZE_SHOOT"),
+	FIREBALLATTACK_SHOOTSOUND_VOLUME("Attacks.FireballAttack.ShootSound.Volume", 2),
+	FIREBALLATTACK_SHOOTSOUND_PITCH("Attacks.FireballAttack.ShootSound.Pitch", 1),
+	GRABSLAMATTACK_GRABTIME("Attacks.GrabSlamAttack.GrabTime", 500),
+	GRABSLAMATTACK_UPVELOCITY("Attacks.GrabSlamAttack.UpVelocity", 2.5),
+	GRABSLAMATTACK_THROWVELOCITY("Attacks.GrabSlamAttack.ThrowVelocity", -1.8),
+	GRABSLAMATTACK_THROWSOUND_NAME("Attacks.GrabSlamAttack.ThrowSound.Name", "ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR"),
+	GRABSLAMATTACK_THROWSOUND_VOLUME("Attacks.GrabSlamAttack.ThrowSound.Volume", 2),
+	GRABSLAMATTACK_THROWSOUND_PITCH("Attacks.GrabSlamAttack.ThrowSound.Pitch", 1),
+	GRABSLAMATTACK_THROWSOUND_VELOCITY("Attacks.GrabSlamAttack.ThrowSound.Velocity", 2.5),
+	TNTATTACK_VELOCITY_X("Attacks.TNTAttack.Velocity.X", 0), TNTATTACK_VELOCITY_Y("Attacks.TNTAttack.Velocity.Y", 2),
+	TNTATTACK_VELOCITY_Z("Attacks.TNTAttack.Velocity.Z", 0), TNTATTACK_TICKS("Attacks.TNTAttack.Ticks", 72),
+	TNTATTACK_POWER("Attacks.TNTAttack.Power", 5), DEBUGMODE_ENABLED("DebugMode.Enabled", true),
+	DEBUGMODE_ALLOW("DebugMode.Allow", "MSWS", null);
 
 	private String path;
 	private Object value;
@@ -235,6 +287,10 @@ public enum CE {
 
 	public int intValue() {
 		return getValue(Number.class).intValue();
+	}
+
+	public float floatValue() {
+		return getValue(Number.class).floatValue();
 	}
 
 }

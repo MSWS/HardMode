@@ -66,7 +66,6 @@ public class CustomBlaze extends BehaviorListener {
 		}.runTaskTimer(plugin, 0, 1);
 	}
 
-	@SuppressWarnings("unchecked")
 	@EventHandler
 	public void onChunkLoad(ChunkLoadEvent event) {
 		Chunk chunk = event.getChunk();
@@ -78,7 +77,7 @@ public class CustomBlaze extends BehaviorListener {
 					Block block = chunk.getBlock(x, y, z);
 					if (!block.isLiquid())
 						continue;
-					List<String> mats = CE.BLAZE_SPAWNING_VALIDBLOCKS.getValue(List.class);
+					List<String> mats = plugin.getConfig().getStringList("Mobs.Blaze.Spawning.ValidBlocks");
 					if (!mats.contains(block.getType().toString()))
 						continue;
 					blocks.add(block);

@@ -12,6 +12,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class BlockPhysicThrowAttack implements Attack {
 
@@ -35,7 +36,8 @@ public class BlockPhysicThrowAttack implements Attack {
 
 		Material material = (Material) data[0];
 
-		if (attacker.getLocation().distanceSquared(target.getLocation()) >= 100)
+		if (attacker.getLocation().distanceSquared(target.getLocation()) >= CE.BLOCKPHYSICTHROW_MINIMUMDISTANCE
+				.doubleValue())
 			return;
 
 		FallingBlock fall = attacker.getWorld().spawnFallingBlock(attacker.getLocation(),
@@ -58,7 +60,9 @@ public class BlockPhysicThrowAttack implements Attack {
 				}
 				if (System.currentTimeMillis() - lastHit < 100)
 					return;
-				for (Entity ent : fall.getLocation().getNearbyEntities(2, 2, 2)) {
+				double hRange = CE.BLOCKPHYSICTHROW_DAMAGE_HORIZONTALRANGE.doubleValue();
+				double yRange = CE.BLOCKPHYSICTHROW_DAMAGE_VERTICALRANGE.doubleValue();
+				for (Entity ent : fall.getLocation().getNearbyEntities(hRange, yRange, hRange)) {
 					if (ent.equals(attacker))
 						continue;
 					if (!(ent instanceof LivingEntity))
@@ -66,8 +70,10 @@ public class BlockPhysicThrowAttack implements Attack {
 
 					lastHit = System.currentTimeMillis();
 					LivingEntity e = (LivingEntity) ent;
-					e.damage(8, e);
-					e.getWorld().playSound(e.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, .1f);
+					e.damage(CE.BLOCKPHYSICTHROW_DAMAGE_DAMAGE.doubleValue(), e);
+					e.getWorld().playSound(e.getLocation(), CE.BLOCKPHYSICTHROW_HITSOUND_NAME.getValue(Sound.class),
+							CE.BLOCKPHYSICTHROW_HITSOUND_VOLUME.floatValue(),
+							CE.BLOCKPHYSICTHROW_HITSOUND_PITCH.floatValue());
 				}
 			}
 		}.runTaskTimer(plugin, 0, 1);

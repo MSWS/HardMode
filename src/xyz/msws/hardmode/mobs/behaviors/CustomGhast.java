@@ -63,7 +63,7 @@ public class CustomGhast extends BehaviorListener {
 			return;
 		}
 
-		if (random.nextDouble() > CE.GHAST_SHOOT_PROBABILITY.getValue(Number.class).doubleValue())
+		if (random.nextDouble() > CE.BLAZE_SPAWNING_PROBABILITY.getValue(Number.class).doubleValue())
 			return;
 
 		MSG.tell(player, CE.GHAST_SPAWNING_MESSAGEONSPAWN.getValue(String.class));

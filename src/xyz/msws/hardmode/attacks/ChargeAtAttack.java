@@ -10,6 +10,7 @@ import org.bukkit.util.Vector;
 import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.utils.CE;
 
 public class ChargeAtAttack implements Attack {
 
@@ -31,19 +32,21 @@ public class ChargeAtAttack implements Attack {
 		Vector vel = target.getLocation().clone().toVector().subtract(attacker.getLocation().clone().toVector());
 
 		vel.normalize();
-		vel.multiply(target.getLocation().distance(attacker.getLocation()) / 2);
+		vel.multiply(target.getLocation().distance(attacker.getLocation())
+				* CE.CHARGEATATTACK_RELATIVEMULTIPLIER.doubleValue());
 		vel.setY(vel.getY() + .1);
 
 		attacker.setVelocity(vel);
 
-		attacker.getWorld().playSound(attacker.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 2, .1f);
+		attacker.getWorld().playSound(attacker.getLocation(), CE.CHARGEATATTACK_LAUNCHSOUND_NAME.getValue(Sound.class),
+				CE.CHARGEATATTACK_LAUNCHSOUND_VOLUME.floatValue(), CE.CHARGEATATTACK_LAUNCHSOUND_PITCH.floatValue());
 
 		long launchTime = System.currentTimeMillis();
 
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				if (System.currentTimeMillis() - launchTime > 3000) {
+				if (System.currentTimeMillis() - launchTime > CE.CHARGEATATTACK_HITBOXLIFETIME.longValue()) {
 					this.cancel();
 					return;
 				}
@@ -67,8 +70,10 @@ public class ChargeAtAttack implements Attack {
 					if (!(ent instanceof LivingEntity))
 						continue;
 					LivingEntity t = (LivingEntity) ent;
-					t.damage(radius * 3, attacker);
-					t.getWorld().playSound(t.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, 1, .3f);
+					t.damage(radius * CE.CHARGEATATTACK_DAMAGE.doubleValue(), attacker);
+					t.getWorld().playSound(t.getLocation(), CE.CHARGEATATTACK_HITSOUND_NAME.getValue(Sound.class),
+							CE.CHARGEATATTACK_HITSOUND_VOLUME.floatValue(),
+							CE.CHARGEATATTACK_HITSOUND_PITCH.floatValue());
 					this.cancel();
 					return;
 				}
