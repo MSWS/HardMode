@@ -29,6 +29,7 @@ import xyz.msws.hardmode.modules.commands.CommandModule;
 import xyz.msws.hardmode.modules.data.ConnectionManager;
 import xyz.msws.hardmode.modules.data.DataManager;
 import xyz.msws.hardmode.modules.debug.DebugModule;
+import xyz.msws.hardmode.modules.mobs.BossManager;
 import xyz.msws.hardmode.modules.mobs.MobManager;
 import xyz.msws.hardmode.modules.movement.PlayerMovementModule;
 import xyz.msws.hardmode.utils.CE;
@@ -103,6 +104,7 @@ public class HardMode extends JavaPlugin {
 		modules.add(new OldPVPModule(this));
 		modules.add(new PlayerMovementModule(this));
 		modules.add(new DebugModule(this));
+		modules.add(new BossManager(this));
 
 		ConfigurationSerialization.registerClass(CItem.class, "CItem");
 

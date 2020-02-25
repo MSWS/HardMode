@@ -14,6 +14,7 @@ import xyz.msws.hardmode.attacks.ChargeAtAttack;
 import xyz.msws.hardmode.attacks.FastArrowAttack;
 import xyz.msws.hardmode.attacks.FireballAttack;
 import xyz.msws.hardmode.attacks.GrabSlamAttack;
+import xyz.msws.hardmode.attacks.GroundPoundAttack;
 import xyz.msws.hardmode.attacks.TNTAttack;
 import xyz.msws.hardmode.mobs.behaviors.CustomBlaze;
 import xyz.msws.hardmode.mobs.behaviors.CustomCreeper;
@@ -57,6 +58,7 @@ public class MobManager extends AbstractModule {
 		attacks.put(AID.BLOCK_PHYSIC_THROW, new BlockPhysicThrowAttack(plugin));
 		attacks.put(AID.FIREBALL, new FireballAttack(plugin));
 		attacks.put(AID.CHARGE_AT, new ChargeAtAttack(plugin));
+		attacks.put(AID.GROUND_POUND, new GroundPoundAttack(plugin));
 	}
 
 	public Attack getAttack(AID attack) {
@@ -71,7 +73,7 @@ public class MobManager extends AbstractModule {
 
 	@Override
 	public ModulePriority getPriority() {
-		return ModulePriority.LOW;
+		return ModulePriority.HIGH;
 	}
 
 }
