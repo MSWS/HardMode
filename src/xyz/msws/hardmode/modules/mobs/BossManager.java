@@ -3,6 +3,7 @@ package xyz.msws.hardmode.modules.mobs;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Entity;
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.modules.AbstractModule;
 import xyz.msws.hardmode.modules.ModulePriority;
+import xyz.msws.hardmode.utils.MSG;
 
 public class BossManager extends AbstractModule {
 
@@ -21,7 +23,6 @@ public class BossManager extends AbstractModule {
 
 	public BossManager(HardMode plugin) {
 		super("BossManager", plugin);
-
 	}
 
 	@Override
@@ -35,11 +36,10 @@ public class BossManager extends AbstractModule {
 	public void disable() {
 		for (Boss boss : bosses.values())
 			boss.getEntity().remove();
-
 	}
 
 	@SuppressWarnings("unchecked")
-	public Boss spawnBoss(BossType type, Location loc) {
+	public Boss spawnBoss(Location loc, BossType type) {
 		Entity boss = loc.getWorld().spawnEntity(loc, type.getType());
 		Boss b = null;
 		try {
@@ -62,9 +62,24 @@ public class BossManager extends AbstractModule {
 		}
 		if (b == null)
 			return null;
+
+		MSG.tell(loc.getWorld(), "Boss",
+				type.getName() + MSG.DEFAULT + " has spawned at " + MSG.format(loc, false, false));
+
 		UUID uuid = boss.getUniqueId();
 		bosses.put(uuid, b);
 		return b;
+	}
+
+	public Boss getNearestBoss(Location loc) {
+		return bosses.values().stream().sorted(new Comparator<Boss>() {
+			@Override
+			public int compare(Boss o1, Boss o2) {
+				return o1.getEntity().getLocation().distanceSquared(loc) > o2.getEntity().getLocation().distance(loc)
+						? -1
+						: 1;
+			}
+		}).findFirst().orElse(null);
 	}
 
 	public boolean isBoss(UUID uuid) {

@@ -1,4 +1,4 @@
-package xyz.msws.hardmode.modules.mobs;
+package xyz.msws.hardmode.boss.behaviors;
 
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +31,11 @@ import org.bukkit.util.Vector;
 
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
+import xyz.msws.hardmode.modules.mobs.Boss;
+import xyz.msws.hardmode.modules.mobs.BossType;
+import xyz.msws.hardmode.modules.mobs.MobSelector;
+import xyz.msws.hardmode.modules.mobs.MobTargetter;
+import xyz.msws.hardmode.modules.mobs.PeriodManager;
 import xyz.msws.hardmode.utils.Callback;
 import xyz.msws.hardmode.utils.MSG;
 import xyz.msws.hardmode.world.Area;

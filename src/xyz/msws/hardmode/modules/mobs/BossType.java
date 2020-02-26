@@ -2,6 +2,8 @@ package xyz.msws.hardmode.modules.mobs;
 
 import org.bukkit.entity.EntityType;
 
+import xyz.msws.hardmode.boss.behaviors.GolemBoss;
+
 public enum BossType {
 	GOLEM(EntityType.IRON_GOLEM, "&7&lLOGEM", GolemBoss.class);
 

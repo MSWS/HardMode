@@ -31,7 +31,7 @@ public class HardCommand extends BukkitCommand {
 
 		switch (args[0].toLowerCase()) {
 		case "spawnboss":
-			plugin.getModule(BossManager.class).spawnBoss(BossType.GOLEM, ((Player) sender).getLocation());
+			plugin.getModule(BossManager.class).spawnBoss(((Player) sender).getLocation(), BossType.GOLEM);
 			MSG.tell(sender, "Hard", "Spawned boss.");
 			break;
 		case "reload":

@@ -5,7 +5,10 @@ import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class MSG {
 	private final static int CENTER_PX = 154;
@@ -86,6 +89,35 @@ public class MSG {
 			message += MSG.DEFAULT + ".";
 
 		tell(sender, PREFIX + module + "> " + DEFAULT + message);
+	}
+
+	public static void tell(World world, String module, String message) {
+		for (Player p : world.getPlayers())
+			tell(p, module, message);
+	}
+
+	public static void tell(World world, String message) {
+		for (Player p : world.getPlayers())
+			tell(p, message);
+	}
+
+	public static String format(Location loc, boolean world, boolean decimals) {
+		String result = world ? FORMATTER + loc.getWorld().getName() : "";
+		String x, y, z;
+		if (decimals) {
+			x = loc.getX() + "";
+			y = loc.getY() + "";
+			z = loc.getZ() + "";
+		} else {
+			x = loc.getBlockX() + "";
+			y = loc.getBlockY() + "";
+			z = loc.getBlockZ() + "";
+		}
+
+		result += FORMAT_SEPARATOR + " X: " + NUMBER + x;
+		result += FORMAT_SEPARATOR + " Y: " + NUMBER + y;
+		result += FORMAT_SEPARATOR + " Z: " + NUMBER + z;
+		return result;
 	}
 
 	public static void announce(String message) {
