@@ -3,6 +3,7 @@ package xyz.msws.hardmode.modules.mobs;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -58,29 +60,69 @@ public class GolemBoss implements Boss, Listener {
 
 		period = new PeriodManager(golem);
 
-		period.addPeriodicalAction(new Callback<Entity>() {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+
+		period.addPeriodicalAction(new Callback<Object>() {
 			@Override
-			public void execute(Entity arg) {
+			public void execute(Object arg) {
 				for (Location l : area.getEdges(1)) {
 					l.getWorld().spawnParticle(Particle.FLAME, l, 0);
 				}
 			}
 		}, 500);
 
-		period.addPeriodicalAction(new Callback<Entity>() {
+		period.addPeriodicalAction(new Callback<Object>() {
 			@Override
-			public void execute(Entity arg) {
+			public void execute(Object j) {
 				for (Location l : area.getFaces(3)) {
 					l.getWorld().spawnParticle(Particle.BARRIER, l, 0);
 				}
 			}
 		}, 1000);
 
+		period.addPeriodicalAction(new Callback<Object>() {
+			long start = System.currentTimeMillis();
+
+			@Override
+			public void execute(Object arg) {
+				long time = System.currentTimeMillis() - start;
+				double speed = golem.getHealth() / golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+				speed = 1000.0 * (speed);
+				for (double y = 0; y < 2; y += .5) {
+					Location off = golem.getLocation().clone().add(Math.cos(y * 5 + time / speed), y,
+							Math.sin(y * 5.0 + time / speed));
+					off.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, off, 0);
+				}
+			}
+		}, 5);
+
+		period.addPeriodicalAction(new Callback<Object>() {
+			@Override
+			public void execute(Object arg) {
+				Sound[] sounds = new Sound[] { Sound.ENTITY_IRON_GOLEM_DEATH, Sound.ENTITY_GHAST_SCREAM,
+						Sound.ENTITY_IRON_GOLEM_HURT, Sound.BLOCK_ANVIL_BREAK, Sound.ENTITY_ZOMBIE_BREAK_WOODEN_DOOR,
+						Sound.BLOCK_IRON_DOOR_OPEN, Sound.BLOCK_STONE_BREAK, Sound.BLOCK_STONE_PLACE,
+						Sound.ENTITY_BLAZE_SHOOT };
+				if (random.nextDouble() < golem.getHealth()
+						/ golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+					return;
+				golem.getWorld().playSound(golem.getLocation(), sounds[random.nextInt(sounds.length)], 2,
+						random.nextFloat() * 2);
+			}
+		}, 3500);
+
+		period.addPeriodicalAction(new Callback<Object>() {
+			@Override
+			public void execute(Object arg) {
+				golem.setHealth(golem.getHealth() * 1.1);
+				golem.getWorld().playSound(golem.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, 1);
+			}
+		}, 10000);
+
 		MobTargetter target = new MobTargetter() {
 			@Override
 			public Entity getTarget(List<Entity> targets) {
-				targets = targets.stream().filter(ent -> getSelector().matches(ent))
-						.filter(ent -> area.contains(ent.getLocation())).collect(Collectors.toList());
+				targets = targets.stream().filter(ent -> getSelector().matches(ent)).collect(Collectors.toList());
 				targets.remove(golem);
 				targets.sort(distance(golem.getLocation()));
 				if (targets.isEmpty())
@@ -94,23 +136,24 @@ public class GolemBoss implements Boss, Listener {
 		period.addPeriodicalAttack(HardMode.getPlugin().getMobManager().getAttack(AID.BLOCK_PHYSIC_THROW), target, 1000,
 				Material.IRON_BLOCK);
 
-		period.addPeriodicalAction(new Callback<Entity>() {
+		period.addPeriodicalAction(new Callback<Object>() {
 			@Override
-			public void execute(Entity arg) {
+			public void execute(Object arg) {
 				bar.setProgress(golem.getHealth() / golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
 			}
 		}, 5);
 
-		period.addPeriodicalAction(new Callback<Entity>() {
+		period.addPeriodicalAction(new Callback<Object>() {
 			@Override
-			public void execute(Entity arg) {
+			public void execute(Object arg) {
 				if (!area.contains(golem.getLocation())) {
 					Vector off = area.getMiddle().toVector().subtract(golem.getLocation().toVector());
 					off.multiply(.05);
+					off.setY(1);
 					golem.setVelocity(golem.getVelocity().clone().add(off));
 				}
 			}
-		}, 500);
+		}, 2000);
 
 		Bukkit.getPluginManager().registerEvents(this, HardMode.getPlugin());
 	}

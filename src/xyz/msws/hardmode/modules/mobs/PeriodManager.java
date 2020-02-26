@@ -22,7 +22,7 @@ public class PeriodManager {
 		this.tasks = new ArrayList<BukkitTask>();
 	}
 
-	public void addPeriodicalAction(Callback<Entity> call, long time) {
+	public void addPeriodicalAction(Callback<Object> call, long time) {
 		tasks.add(new BukkitRunnable() {
 			long nextAction = System.currentTimeMillis();
 
@@ -35,7 +35,7 @@ public class PeriodManager {
 				if (System.currentTimeMillis() <= nextAction)
 					return;
 				nextAction = System.currentTimeMillis() + time;
-				call.execute(entity);
+				call.execute(null);
 			}
 		}.runTaskTimer(HardMode.getPlugin(), 0, 1));
 	}
