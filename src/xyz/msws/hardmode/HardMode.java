@@ -100,11 +100,12 @@ public class HardMode extends JavaPlugin {
 		modules.add(new InteractionModule(this));
 		mobManager = new MobManager(this);
 		modules.add(mobManager);
+		
+		modules.add(new BossManager(this));
 
 		modules.add(new OldPVPModule(this));
 		modules.add(new PlayerMovementModule(this));
 		modules.add(new DebugModule(this));
-		modules.add(new BossManager(this));
 
 		ConfigurationSerialization.registerClass(CItem.class, "CItem");
 
