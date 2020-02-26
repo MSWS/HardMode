@@ -17,7 +17,7 @@ import com.google.common.base.Preconditions;
 
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.AID;
-import xyz.msws.hardmode.utils.MSG;
+import xyz.msws.hardmode.data.LootGenerator;
 import xyz.msws.hardmode.world.Area;
 
 public class GolemBoss extends HBoss {
@@ -33,14 +33,13 @@ public class GolemBoss extends HBoss {
 
 		this.golem = (IronGolem) entity;
 
-		this.aoe = new Area(entity.getLocation().clone().subtract(20, 0, 20),
+		this.aoe = new Area(entity.getLocation().clone().subtract(20, 2, 20),
 				entity.getLocation().clone().add(20, 2, 20));
 
 		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH)
 				.setBaseValue(golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() * 3);
 
 		new BukkitRunnable() {
-
 			long nextGroundPound = System.currentTimeMillis() + random.nextLong(1000, 1001);
 
 			@Override
@@ -61,7 +60,6 @@ public class GolemBoss extends HBoss {
 				if (System.currentTimeMillis() > nextGroundPound) {
 					plugin.getMobManager().getAttack(AID.GROUND_POUND).attack(entity, target);
 					nextGroundPound = System.currentTimeMillis() + random.nextLong(2000, 2001);
-					MSG.announce("Attacked");
 				}
 			}
 		}.runTaskTimer(plugin, 0, 1);
@@ -82,4 +80,5 @@ public class GolemBoss extends HBoss {
 			return;
 	}
 
+	
 }

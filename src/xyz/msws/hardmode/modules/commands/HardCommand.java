@@ -27,6 +27,11 @@ public class HardCommand extends BukkitCommand {
 		}
 
 		switch (args[0].toLowerCase()) {
+		case"spawnboss":
+			
+			
+			
+			break;
 		case "reload":
 			MSG.tell(sender, "Hard", plugin.reload() ? MSG.SUCCESS + "Successfully reloaded plugin."
 					: MSG.ERROR + "An error occured while reloading the plugin.");

@@ -11,14 +11,15 @@ import org.bukkit.inventory.ItemStack;
 
 import xyz.msws.hardmode.HardMode;
 import xyz.msws.hardmode.attacks.Attack;
+import xyz.msws.hardmode.data.Loot;
 import xyz.msws.hardmode.world.Area;
 
-public abstract class HBoss implements Listener {
+public abstract class HBoss implements Listener, Loot {
 	protected Entity entity;
 
 	protected List<Attack> attacks;
 
-	protected Map<List<ItemStack>, Double> loot;
+	protected Loot loot;
 
 	private Location spawnLocation;
 
@@ -60,7 +61,7 @@ public abstract class HBoss implements Listener {
 	}
 
 	public Map<List<ItemStack>, Double> getLoot() {
-		return loot;
+		return loot.getLoot();
 	}
 
 }
