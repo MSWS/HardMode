@@ -204,7 +204,7 @@ public enum CE {
 	BLOCKITEMTHROW_HITSOUND_VOLUME("Attacks.BlockItemThrow.HitSound.Volume", 1),
 	BLOCKITEMTHROW_HITSOUND_PITCH("Attacks.BlockItemThrow.HitSound.Pitch", 2),
 	BLOCKITEMTHROW_REMOVEBLOCKAFTER("Attacks.BlockItemThrow.RemoveBlockAfter", 400),
-	BLOCKPHYSICTHROW_MINIMUMDISTANCE("Attacks.BlockPhysicThrow.MinimumDistance", 100),
+	BLOCKPHYSICTHROW_MINIMUMDISTANCE("Attacks.BlockPhysicThrow.MinimumDistance", 400),
 	BLOCKPHYSICTHROW_MULTIPLIER("Attacks.BlockPhysicThrow.Multiplier", 0.8),
 	BLOCKPHYSICTHROW_YMULTIPLIER("Attacks.BlockPhysicThrow.YMultiplier", 1.2),
 	BLOCKPHYSICTHROW_DAMAGE_HORIZONTALRANGE("Attacks.BlockPhysicThrow.Damage.HorizontalRange", 2),

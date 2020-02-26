@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -26,12 +27,15 @@ public class BossManager extends AbstractModule {
 	@Override
 	public void initialize() {
 		bosses = new HashMap<UUID, Boss>();
+
+		Bukkit.getBossBars().forEachRemaining(bar -> bar.removeAll());
 	}
 
 	@Override
 	public void disable() {
 		for (Boss boss : bosses.values())
 			boss.getEntity().remove();
+
 	}
 
 	@SuppressWarnings("unchecked")

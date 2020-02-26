@@ -46,8 +46,11 @@ public class HardMode extends JavaPlugin {
 
 	private FileConfiguration config;
 
+	private static HardMode plugin;
+
 	@Override
 	public void onEnable() {
+		plugin = this;
 		modules = new HashSet<>();
 		configFile = new File(getDataFolder(), "config.yml");
 		if (!configFile.exists())
@@ -59,7 +62,7 @@ public class HardMode extends JavaPlugin {
 
 		for (CE ce : CE.values()) {
 			if (!config.contains(ce.getPath())) {
-				MSG.log("Config is missing path " + MSG.FORMAT_INFO + ce.getPath().trim() + " " + MSG.DEFAULT
+				MSG.log("Config is missing path " + MSG.FORMAT_INFO + ce.getPath().trim() + MSG.DEFAULT
 						+ ", setting to default.");
 				config.set(ce.getPath(), ce.getValue());
 				save = true;
@@ -100,7 +103,7 @@ public class HardMode extends JavaPlugin {
 		modules.add(new InteractionModule(this));
 		mobManager = new MobManager(this);
 		modules.add(mobManager);
-		
+
 		modules.add(new BossManager(this));
 
 		modules.add(new OldPVPModule(this));
@@ -215,4 +218,7 @@ public class HardMode extends JavaPlugin {
 		}
 	}
 
+	public static HardMode getPlugin() {
+		return plugin;
+	}
 }

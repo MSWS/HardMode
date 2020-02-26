@@ -1,5 +1,6 @@
 package xyz.msws.hardmode.world;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -75,5 +76,78 @@ public class Area {
 
 	public Location getMaxPoint() {
 		return new Location(Bukkit.getWorld(worldID), x2, y2, z2);
+	}
+
+	public Location getMiddle() {
+		return new Location(Bukkit.getWorld(worldID), (x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2);
+	}
+
+	public List<Location> getFaces(double step) {
+		List<Location> result = new ArrayList<Location>();
+		World world = Bukkit.getWorld(worldID);
+		for (double x = x1; x <= x2; x += step) {
+			for (double z = z1; z <= z2; z += step) {
+				Location l = new Location(world, x, y1, z);
+				result.add(l);
+				l = new Location(world, x, y2, z);
+				result.add(l);
+			}
+
+			for (double y = y1; y <= y2; y += step) {
+				Location l = new Location(world, x, y, z1);
+				result.add(l);
+				l = new Location(world, x, y, z2);
+				result.add(l);
+			}
+		}
+
+		for (double y = y1; y <= y2; y += step) {
+			for (double z = z1; z <= z2; z += step) {
+				Location l = new Location(world, x1, y, z);
+				result.add(l);
+				l = new Location(world, x2, y, z);
+				result.add(l);
+			}
+		}
+
+		return result;
+	}
+
+	public List<Location> getEdges(double step) {
+		List<Location> result = new ArrayList<Location>();
+		World world = Bukkit.getWorld(worldID);
+		for (double x = x1; x <= x2; x += step) {
+			Location l = new Location(world, x, y2, z2);
+			result.add(l);
+			l = new Location(world, x, y1, z2);
+			result.add(l);
+			l = new Location(world, x, y2, z1);
+			result.add(l);
+			l = new Location(world, x, y1, z1);
+			result.add(l);
+		}
+
+		for (double y = y1; y <= y2; y += .2) {
+			Location l = new Location(world, x1, y, z2);
+			result.add(l);
+			l = new Location(world, x2, y, z2);
+			result.add(l);
+			l = new Location(world, x2, y, z1);
+			result.add(l);
+			l = new Location(world, x1, y, z1);
+			result.add(l);
+		}
+
+		for (double z = z1; z <= z2; z += .2) {
+			Location l = new Location(world, x2, y2, z);
+			result.add(l);
+			l = new Location(world, x2, y1, z);
+			result.add(l);
+			l = new Location(world, x1, y1, z);
+			result.add(l);
+			l = new Location(world, x1, y2, z);
+			result.add(l);
+		}
+		return result;
 	}
 }

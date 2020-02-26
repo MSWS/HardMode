@@ -260,7 +260,7 @@ Attacks:
     RemoveBlockAfter: 400
 # Endermen user this attack
   BlockPhysicThrow: # The attacker throws a physical block at the target
-    MinimumDistance: 100
+    MinimumDistance: 400
     Multiplier: 0.8
     YMultiplier: 1.2
     Damage:

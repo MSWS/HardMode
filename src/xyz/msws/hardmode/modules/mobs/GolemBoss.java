@@ -1,18 +1,141 @@
 package xyz.msws.hardmode.modules.mobs;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
-public class GolemBoss implements Boss {
+import xyz.msws.hardmode.HardMode;
+import xyz.msws.hardmode.attacks.AID;
+import xyz.msws.hardmode.utils.Callback;
+import xyz.msws.hardmode.utils.MSG;
+import xyz.msws.hardmode.world.Area;
+
+public class GolemBoss implements Boss, Listener {
 
 	private IronGolem golem;
 
+	private Area area;
+
+	private BossBar bar;
+
+	private PeriodManager period;
+
 	public GolemBoss(IronGolem golem) {
 		this.golem = (IronGolem) golem;
+
+		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH)
+				.setBaseValue(golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() * 3);
+
+		golem.setHealth(golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+
+		this.area = new Area(golem.getLocation().clone().add(30, 30, 30),
+				golem.getLocation().clone().subtract(30, 10, 30));
+
+		bar = Bukkit.createBossBar(MSG.color(this.getBossType().getName()), BarColor.WHITE, BarStyle.SEGMENTED_12);
+
+		period = new PeriodManager(golem);
+
+		period.addPeriodicalAction(new Callback<Entity>() {
+			@Override
+			public void execute(Entity arg) {
+				for (Location l : area.getEdges(1)) {
+					l.getWorld().spawnParticle(Particle.FLAME, l, 0);
+				}
+			}
+		}, 500);
+
+		period.addPeriodicalAction(new Callback<Entity>() {
+			@Override
+			public void execute(Entity arg) {
+				for (Location l : area.getFaces(3)) {
+					l.getWorld().spawnParticle(Particle.BARRIER, l, 0);
+				}
+			}
+		}, 1000);
+
+		MobTargetter target = new MobTargetter() {
+			@Override
+			public Entity getTarget(List<Entity> targets) {
+				targets = targets.stream().filter(ent -> getSelector().matches(ent))
+						.filter(ent -> area.contains(ent.getLocation())).collect(Collectors.toList());
+				targets.remove(golem);
+				targets.sort(distance(golem.getLocation()));
+				if (targets.isEmpty())
+					return null;
+				return targets.get(0);
+			}
+		};
+
+		period.addPeriodicalAttack(HardMode.getPlugin().getMobManager().getAttack(AID.GROUND_POUND), target, 5000);
+
+		period.addPeriodicalAttack(HardMode.getPlugin().getMobManager().getAttack(AID.BLOCK_PHYSIC_THROW), target, 1000,
+				Material.IRON_BLOCK);
+
+		period.addPeriodicalAction(new Callback<Entity>() {
+			@Override
+			public void execute(Entity arg) {
+				bar.setProgress(golem.getHealth() / golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+			}
+		}, 5);
+
+		period.addPeriodicalAction(new Callback<Entity>() {
+			@Override
+			public void execute(Entity arg) {
+				if (!area.contains(golem.getLocation())) {
+					Vector off = area.getMiddle().toVector().subtract(golem.getLocation().toVector());
+					off.multiply(.05);
+					golem.setVelocity(golem.getVelocity().clone().add(off));
+				}
+			}
+		}, 500);
+
+		Bukkit.getPluginManager().registerEvents(this, HardMode.getPlugin());
+	}
+
+	@EventHandler
+	public void onMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (!area.contains(player.getLocation())) {
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					bar.removePlayer(player);
+				}
+			}.runTaskLater(HardMode.getPlugin(), 20);
+			return;
+		}
+		if (golem != null && golem.isValid())
+			bar.addPlayer(player);
+	}
+
+	@EventHandler
+	public void onDeath(EntityDeathEvent event) {
+		if (!event.getEntity().equals(golem))
+			return;
+		bar.removeAll();
 	}
 
 	@Override
@@ -28,6 +151,40 @@ public class GolemBoss implements Boss {
 	@Override
 	public Map<List<ItemStack>, Double> getLoot() {
 		return null;
+	}
+
+	@Override
+	public Area getArea() {
+		return area;
+	}
+
+	public Comparator<Entity> distance(Location loc) {
+		return new Comparator<Entity>() {
+			@Override
+			public int compare(Entity o1, Entity o2) {
+				return loc.distanceSquared(o1.getLocation()) > loc.distanceSquared(o2.getLocation()) ? 1 : -1;
+			}
+		};
+	}
+
+	@Override
+	public MobSelector getSelector() {
+		return new MobSelector() {
+			@Override
+			public boolean matches(Entity ent) {
+				if (ent instanceof Player) {
+					GameMode gm = ((Player) ent).getGameMode();
+					return (gm == GameMode.SURVIVAL || gm == GameMode.ADVENTURE);
+				}
+
+				return (!ent.equals(golem) && ent.getType() != EntityType.IRON_GOLEM && ent instanceof LivingEntity);
+			}
+		};
+	}
+
+	@Override
+	public PeriodManager getAttackManager() {
+		return period;
 	}
 
 }

@@ -1,6 +1,7 @@
 package xyz.msws.hardmode.attacks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -28,7 +29,6 @@ public class BlockPhysicThrowAttack implements Attack {
 
 	@Override
 	public void attack(Entity attacker, Entity target, Object... data) {
-
 		Preconditions.checkArgument(attacker.getWorld().equals(target.getWorld()),
 				"Attacker and world not in same world");
 
@@ -40,12 +40,13 @@ public class BlockPhysicThrowAttack implements Attack {
 				.doubleValue())
 			return;
 
-		FallingBlock fall = attacker.getWorld().spawnFallingBlock(attacker.getLocation(),
-				Bukkit.createBlockData(material));
+		Location spawn = attacker.getLocation().clone().add(0, 1, 0);
 
-		Vector aim = target.getLocation().clone().add(0, 1, 0).toVector().subtract(attacker.getLocation().toVector());
-		aim.multiply(.8);
-		aim.setY(aim.getY() * 1.2);
+		FallingBlock fall = attacker.getWorld().spawnFallingBlock(spawn, Bukkit.createBlockData(material));
+
+		Vector aim = target.getLocation().clone().add(0, 1, 0).toVector().subtract(spawn.toVector());
+		aim.multiply(.6);
+		aim.setY(aim.getY() * 1.4);
 		fall.setVelocity(aim);
 		fall.setHurtEntities(true);
 
@@ -70,7 +71,7 @@ public class BlockPhysicThrowAttack implements Attack {
 
 					lastHit = System.currentTimeMillis();
 					LivingEntity e = (LivingEntity) ent;
-					e.damage(CE.BLOCKPHYSICTHROW_DAMAGE_DAMAGE.doubleValue(), e);
+					e.damage(CE.BLOCKPHYSICTHROW_DAMAGE_DAMAGE.doubleValue(), attacker);
 					e.getWorld().playSound(e.getLocation(), CE.BLOCKPHYSICTHROW_HITSOUND_NAME.getValue(Sound.class),
 							CE.BLOCKPHYSICTHROW_HITSOUND_VOLUME.floatValue(),
 							CE.BLOCKPHYSICTHROW_HITSOUND_PITCH.floatValue());
