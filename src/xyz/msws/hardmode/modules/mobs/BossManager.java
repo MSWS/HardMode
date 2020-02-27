@@ -5,11 +5,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Entity;
 
 import xyz.msws.hardmode.HardMode;
@@ -36,6 +38,17 @@ public class BossManager extends AbstractModule {
 	public void disable() {
 		for (Boss boss : bosses.values())
 			boss.getEntity().remove();
+
+		Iterator<KeyedBossBar> bars = Bukkit.getBossBars();
+		while (bars.hasNext()) {
+			KeyedBossBar bar = bars.next();
+			try {
+				UUID id = UUID.fromString(bar.getKey().getKey());
+				if (bosses.containsKey(id))
+					bar.removeAll();
+			} catch (IllegalArgumentException e) {
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")

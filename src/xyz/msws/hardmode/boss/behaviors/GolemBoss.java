@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -61,7 +62,9 @@ public class GolemBoss implements Boss, Listener {
 		this.area = new Area(golem.getLocation().clone().add(30, 30, 30),
 				golem.getLocation().clone().subtract(30, 10, 30));
 
-		bar = Bukkit.createBossBar(MSG.color(this.getBossType().getName()), BarColor.WHITE, BarStyle.SEGMENTED_12);
+		NamespacedKey key = new NamespacedKey(HardMode.getPlugin(), golem.getUniqueId() + "");
+
+		bar = Bukkit.createBossBar(key, MSG.color(this.getBossType().getName()), BarColor.WHITE, BarStyle.SEGMENTED_12);
 
 		period = new PeriodManager(golem);
 
@@ -77,13 +80,21 @@ public class GolemBoss implements Boss, Listener {
 		}, 500);
 
 		period.addPeriodicalAction(new Callback<Object>() {
+			long start = System.currentTimeMillis();
+
+//			BlockData bd = Bukkit.createBlockData(Material.IRON_BLOCK);
+
 			@Override
 			public void execute(Object j) {
-				for (Location l : area.getFaces(3)) {
-					l.getWorld().spawnParticle(Particle.BARRIER, l, 0);
+				long time = System.currentTimeMillis() - start;
+
+				for (Location l : area.getFaces(10 + Math.sin(time) * 5)) {
+					Vector off = golem.getLocation().clone().toVector().subtract(l.clone().toVector())
+							.multiply(Math.abs(Math.cos(time / 10000.0)) / 3.5);
+					l.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, l, 0, off.getX(), off.getY(), off.getZ());
 				}
 			}
-		}, 1000);
+		}, 5);
 
 		period.addPeriodicalAction(new Callback<Object>() {
 			long start = System.currentTimeMillis();
@@ -119,7 +130,8 @@ public class GolemBoss implements Boss, Listener {
 		period.addPeriodicalAction(new Callback<Object>() {
 			@Override
 			public void execute(Object arg) {
-				golem.setHealth(golem.getHealth() * 1.1);
+				golem.setHealth(
+						Math.min(golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue(), golem.getHealth() * 1.1));
 				golem.getWorld().playSound(golem.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, 2, 1);
 			}
 		}, 10000);
@@ -139,7 +151,7 @@ public class GolemBoss implements Boss, Listener {
 		period.addPeriodicalAttack(HardMode.getPlugin().getMobManager().getAttack(AID.GROUND_POUND), target, 5000);
 
 		period.addPeriodicalAttack(HardMode.getPlugin().getMobManager().getAttack(AID.BLOCK_PHYSIC_THROW), target, 1000,
-				Material.IRON_BLOCK);
+				Material.IRON_ORE);
 
 		period.addPeriodicalAction(new Callback<Object>() {
 			@Override

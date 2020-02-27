@@ -5,7 +5,7 @@ import org.bukkit.entity.EntityType;
 import xyz.msws.hardmode.boss.behaviors.GolemBoss;
 
 public enum BossType {
-	GOLEM(EntityType.IRON_GOLEM, "&7&lLOGEM", GolemBoss.class);
+	GOLEM(EntityType.IRON_GOLEM, "&e&lLOGEM", GolemBoss.class);
 
 	private EntityType type;
 	private Class<? extends Boss> clazz;

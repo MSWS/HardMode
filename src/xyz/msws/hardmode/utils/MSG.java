@@ -102,7 +102,7 @@ public class MSG {
 	}
 
 	public static String format(Location loc, boolean world, boolean decimals) {
-		String result = world ? FORMATTER + loc.getWorld().getName() : "";
+		String result = world ? FORMATTER + loc.getWorld().getName() + " " : "";
 		String x, y, z;
 		if (decimals) {
 			x = loc.getX() + "";
@@ -114,9 +114,9 @@ public class MSG {
 			z = loc.getBlockZ() + "";
 		}
 
-		result += FORMAT_SEPARATOR + " X: " + NUMBER + x;
-		result += FORMAT_SEPARATOR + " Y: " + NUMBER + y;
-		result += FORMAT_SEPARATOR + " Z: " + NUMBER + z;
+		result += FORMATTER + "X: " + NUMBER + x;
+		result += FORMATTER + " Y: " + NUMBER + y;
+		result += FORMATTER + " Z: " + NUMBER + z;
 		return result;
 	}
 
